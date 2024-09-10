@@ -1,0 +1,27 @@
+server:
+  port: 8080
+  forward-headers-strategy: framework
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5332/MYDB2
+    username: root
+    password: 12345
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+  main:
+    web-application-type: servlet
+  web:
+    resources:
+      static-locations: classpath:/META-INF/resources/
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
