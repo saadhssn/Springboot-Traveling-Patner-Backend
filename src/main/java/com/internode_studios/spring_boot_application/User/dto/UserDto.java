@@ -47,6 +47,7 @@ public final class UserDto {
     private String cell_phone_number;
     private String profile_picture;
     private Boolean status;
+    private String otp;
 
     // Additional constructor for login functionality
     public UserDto(String username, String password) {

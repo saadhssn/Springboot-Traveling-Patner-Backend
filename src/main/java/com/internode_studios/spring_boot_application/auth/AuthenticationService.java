@@ -12,6 +12,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Random;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -21,22 +23,40 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
+    // Generate a 6-digit OTP
+    private String generateOtp() {
+        Random random = new Random();
+        int otp = 100000 + random.nextInt(900000); // Generates a 6-digit OTP
+        return String.valueOf(otp);
+    }
+
     public AuthenticationResponse register(RegisterRequest request) {
+        // Generate OTP
+        String otp = generateOtp();
+
+        // Build the User entity with OTP
         User user = User.builder()
                 .first_name(request.getFirst_name())
                 .last_name(request.getLast_name())
                 .username(request.getUsername())
                 .email_address(request.getEmail_address())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER) // Default role
+                .role(Role.valueOf(request.getRole())) // Convert string role to enum
                 .dob(request.getDob())
                 .phone_number(request.getPhone_number())
                 .cell_phone_number(request.getCell_phone_number())
                 .profile_picture(request.getProfile_picture())
                 .status(request.getStatus())
+                .otp(otp) // Save the generated OTP
                 .build();
+
+        // Save the user with the OTP
         User savedUser = repository.save(user);
-        String jwtToken = jwtService.generateToken(user.getId().toString(), user.getUsername(), user.getRole().name());
+
+        // Generate JWT token
+        String jwtToken = jwtService.generateToken(savedUser.getId().toString(), savedUser.getUsername(), savedUser.getRole().name());
+
+        // Map the saved user to UserDto
         UserDto userDto = UserMapper.mapToUserDto(savedUser);
 
         return AuthenticationResponse.builder()

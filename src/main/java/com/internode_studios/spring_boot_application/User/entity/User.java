@@ -57,6 +57,10 @@ public class User implements UserDetails {
     @Column(name = "status")
     private Boolean status;
 
+    // New field for OTP
+    @Column(name = "otp")
+    private String otp;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

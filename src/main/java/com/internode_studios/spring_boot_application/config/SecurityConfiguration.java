@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -30,7 +29,8 @@ public class SecurityConfiguration {
                         "/webjars/**",
                         "/api/auth/**" // Public endpoints
                 ).permitAll()
-                .requestMatchers("/api/demo-controller").permitAll() // Allow access to /users endpoints without JWT
+                .requestMatchers("/api/uploads/**").permitAll() // Allow access to /api/uploads/** without JWT
+                .requestMatchers("/api/demo-controller").permitAll() // Allow access to demo-controller without JWT
                 .requestMatchers("/api/users/**").hasAnyRole("USER", "ADMIN", "MANAGER") // Ensure this matches the roles in your token
                 .anyRequest().authenticated() // Require JWT for all other endpoints
                 .and()

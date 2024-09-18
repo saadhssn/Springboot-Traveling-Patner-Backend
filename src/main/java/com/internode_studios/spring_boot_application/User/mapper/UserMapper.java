@@ -21,7 +21,8 @@ public class UserMapper {
                 user.getPhone_number(),
                 user.getCell_phone_number(),
                 user.getProfile_picture(),
-                user.getStatus()
+                user.getStatus(),
+                user.getOtp()
         );
     }
 
@@ -38,7 +39,8 @@ public class UserMapper {
                 userDto.getPhone_number(),
                 userDto.getCell_phone_number(),
                 userDto.getProfile_picture(),
-                userDto.getStatus()
+                userDto.getStatus(),
+                userDto.getOtp()
         );
     }
 }
