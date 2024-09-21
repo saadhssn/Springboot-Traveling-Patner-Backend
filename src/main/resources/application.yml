@@ -21,6 +21,10 @@ spring:
     resources:
       static-locations: classpath:/META-INF/resources/
 
+application:
+  jwt:
+    secret: OFR25eDzvg6rti2KaJhEmtMdzpr93aGRmINX3+M0jl4
+
 springdoc:
   swagger-ui:
     enabled: true
