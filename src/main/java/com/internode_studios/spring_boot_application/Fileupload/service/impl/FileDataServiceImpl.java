@@ -20,6 +20,7 @@ public class FileDataServiceImpl implements FileDataService {
 
     private final String FOLDER_PATH = "D:\\Saad\\spring-boot\\spring-boot-application\\spring-boot-application\\src\\main\\resources\\static\\datapart";
 
+
     @Override
     public String uploadImageToFileSystem(MultipartFile file) throws IOException {
         // Ensure folder exists

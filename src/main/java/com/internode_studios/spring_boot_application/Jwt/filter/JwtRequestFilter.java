@@ -36,7 +36,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String jwt = null;
 
         // Check if the Authorization header contains a Bearer token
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer: ")) {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);  // Extract the token from the header
             mobileNumber = jwtUtil.extractMobileNumber(jwt);     // Extract the mobile from the token
         }
@@ -51,7 +51,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }
-
 
         // Continue the filter chain
         filterChain.doFilter(request, response);

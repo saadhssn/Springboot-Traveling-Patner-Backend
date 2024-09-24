@@ -10,15 +10,32 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "mobile_number")
     private String mobileNumber;
+
     private String otp;
-    private Long role;
-    private Long basicInformation;
-    private Long license;
-    private Long vehicle;
+
+    @Column(name = "role_id")
+    private Long roleId;
+
+    @Column(name = "basic_information_id")
+    private Long basicInformationId;  // Correctly map the field
+
+    @Column(name = "license_id")
+    private Long licenseId;
+
+    @Column(name = "vehicle_id")
+    private Long vehicleId;
+
     private String status;
+
+    @Column(name = "remember_token")
     private String rememberToken;
+
+    @Column(name = "device_token")
     private String deviceToken;
+
+    @Column(name = "is_otp_verified")
     private Boolean isOtpVerified = false;
 
     // Getters and Setters
@@ -46,36 +63,36 @@ public class User {
         this.otp = otp;
     }
 
-    public Long getRole() {
-        return role;
+    public Long getRoleId() {
+        return roleId;
     }
 
-    public void setRole(Long role) {
-        this.role = role;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 
-    public Long getBasicInformation() {
-        return basicInformation;
+    public Long getBasicInformationId() {
+        return basicInformationId;
     }
 
-    public void setBasicInformation(Long basicInformation) {
-        this.basicInformation = basicInformation;
+    public void setBasicInformationId(Long basicInformationId) {
+        this.basicInformationId = basicInformationId;
     }
 
-    public Long getLicense() {
-        return license;
+    public Long getLicenseId() {
+        return licenseId;
     }
 
-    public void setLicense(Long license) {
-        this.license = license;
+    public void setLicenseId(Long licenseId) {
+        this.licenseId = licenseId;
     }
 
-    public Long getVehicle() {
-        return vehicle;
+    public Long getVehicleId() {
+        return vehicleId;
     }
 
-    public void setVehicle(Long vehicle) {
-        this.vehicle = vehicle;
+    public void setVehicleId(Long vehicleId) {
+        this.vehicleId = vehicleId;
     }
 
     public String getStatus() {

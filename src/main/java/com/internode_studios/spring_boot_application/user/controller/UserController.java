@@ -1,5 +1,6 @@
 package com.internode_studios.spring_boot_application.user.controller;
 
+import com.internode_studios.spring_boot_application.license.model.License;
 import com.internode_studios.spring_boot_application.user.model.User;
 import com.internode_studios.spring_boot_application.Jwt.service.JwtUtil;
 import com.internode_studios.spring_boot_application.user.service.UserService;
@@ -17,11 +18,15 @@ public class UserController {
     @Autowired
     private JwtUtil jwtUtil;
 
+
     // Sign-up method to register user and send OTP
     @PostMapping("/login")
     public ResponseEntity<?> signUp(@RequestBody User user) {
-        userService.registerUser(user);
-        return ResponseEntity.ok("User registered and OTP sent to Mobile number.");
+        User savedUser = userService.registerUser(user);
+        if (savedUser != null) {
+            return ResponseEntity.ok(savedUser);
+        }
+        return ResponseEntity.status(404).body("User not found.");
     }
 
     // Verify OTP method

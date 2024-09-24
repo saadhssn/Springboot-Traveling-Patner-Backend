@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   db:
     container_name: postgres
@@ -15,9 +17,26 @@ services:
       - db
     restart: unless-stopped
 
+  spring-boot-application:
+    image: spring-boot-application-image
+    build: .
+    volumes:
+      - upload_data:/app/uploads  # Mount a volume to /app/uploads in the container
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/MYDB2
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 12345
+    depends_on:
+      - db
+    networks:
+      - db
+
 networks:
   db:
     driver: bridge
 
 volumes:
   db:
+  upload_data:  # Add a new volume for uploaded files
