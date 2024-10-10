@@ -1,9 +1,9 @@
 package com.internode_studios.spring_boot_application.license.service;
 
 import com.internode_studios.spring_boot_application.user.model.User;
-import com.internode_studios.spring_boot_application.user.repository.UserRepository;
 import com.internode_studios.spring_boot_application.license.model.License;
 import com.internode_studios.spring_boot_application.license.repository.LicenseRepository;
+import com.internode_studios.spring_boot_application.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

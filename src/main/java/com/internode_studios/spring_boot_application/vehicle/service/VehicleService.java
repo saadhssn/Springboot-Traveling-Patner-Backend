@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VehicleService {
@@ -25,8 +26,8 @@ public class VehicleService {
     }
 
     // Method to find a vehicle by ID
-    public Vehicle findVehicleById(Long id) {
-        return vehicleRepository.findById(id).orElse(null);
+    public Optional<Vehicle> getVehicleById(Long id) {
+        return vehicleRepository.findById(id);
     }
 
     @Transactional

@@ -1,17 +1,17 @@
-package com.internode_studios.spring_boot_application.role.model;
+package com.internode_studios.spring_boot_application.city.model;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "roles")
-public class Role {
+@Table(name = "cities")
+public class City {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "name", nullable = false)
     private String name;
-    private String slug;
 
     // Getters and Setters
     public Long getId() {
@@ -28,13 +28,5 @@ public class Role {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getSlug() {
-        return slug;
-    }
-
-    public void setSlug(String slug) {
-        this.slug = slug;
     }
 }

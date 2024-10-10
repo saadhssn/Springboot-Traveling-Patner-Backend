@@ -14,14 +14,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
     private UserRepository userRepository;
-
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -35,24 +34,22 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String mobileNumber = null;
         String jwt = null;
 
-        // Check if the Authorization header contains a Bearer token
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);  // Extract the token from the header
-            mobileNumber = jwtUtil.extractMobileNumber(jwt);     // Extract the mobile from the token
+            jwt = authorizationHeader.substring(7);
+            mobileNumber = jwtUtil.extractMobileNumber(jwt);
         }
 
-        // If the mobile number is not null and no authentication is set in the SecurityContext
         if (mobileNumber != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            User userDetails = userRepository.findByMobileNumber(mobileNumber).get(0);  // Assumes mobileNumber is unique
+            User userDetails = userRepository.findByMobileNumber(mobileNumber).get(0);
 
-            if (jwtUtil.validateToken(jwt, mobileNumber)) {
+            if (jwtUtil.validateToken(jwt, userDetails.getMobileNumber())) {
+                String role = jwtUtil.extractRole(jwt);  // Extract role from the token
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, new ArrayList<>());  // Add roles/authorities if needed
+                        userDetails, null, List.of(() -> role)  // Add role to authorities
+                );
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }
-
-        // Continue the filter chain
         filterChain.doFilter(request, response);
     }
 }

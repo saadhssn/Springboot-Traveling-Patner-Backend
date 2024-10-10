@@ -10,4 +10,7 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByMobileNumber(String mobileNumber);
     User findByMobileNumberAndOtp(String mobileNumber, String otp);
+    List<User> findByRole(String role);  // Adjusted method for String role
+
+    List<User> findByMobileNumberAndRole(String tokenMobileNumber, String admin);
 }

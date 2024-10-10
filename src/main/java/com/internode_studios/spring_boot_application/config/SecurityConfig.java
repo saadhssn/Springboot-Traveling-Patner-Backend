@@ -33,10 +33,14 @@ public class SecurityConfig {
                         "/swagger-resources/**",
                         "/v3/api-docs/**",
                         "/webjars/**",
-                        "/api/auth/**",  // Ensure login and OTP verification are public
-                        "/api/auth/login",
-                        "/api/auth/verify-otp"
+                        "/api/auth/admin/login",
+                        "/api/auth/user/login",
+                        "api/auth/user/roleassign",
+                        "/api/auth/verify-otp" // Allow access to this endpoint without token
                 ).permitAll()
+                // Only allow admin access to role endpoints
+                .requestMatchers("/api/roles/**").hasAuthority("admin")
+                .requestMatchers("/api/cities/**").hasAuthority("admin")
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

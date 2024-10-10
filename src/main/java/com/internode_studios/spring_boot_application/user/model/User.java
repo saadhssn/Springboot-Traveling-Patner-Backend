@@ -1,5 +1,6 @@
 package com.internode_studios.spring_boot_application.user.model;
 
+import com.internode_studios.spring_boot_application.role.model.Role;
 import jakarta.persistence.*;
 
 @Entity
@@ -15,11 +16,15 @@ public class User {
 
     private String otp;
 
-    @Column(name = "role_id")
-    private Long roleId;
+//        @ManyToOne
+//        @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
+//        private Role role; // This will be populated from the Role table.
+
+    @Column(name = "role")
+    private String role;
 
     @Column(name = "basic_information_id")
-    private Long basicInformationId;  // Correctly map the field
+    private Long basicInformationId;
 
     @Column(name = "license_id")
     private Long licenseId;
@@ -27,7 +32,7 @@ public class User {
     @Column(name = "vehicle_id")
     private Long vehicleId;
 
-    private String status;
+    private Boolean status;
 
     @Column(name = "remember_token")
     private String rememberToken;
@@ -63,12 +68,20 @@ public class User {
         this.otp = otp;
     }
 
-    public Long getRoleId() {
-        return roleId;
+//        public Role getRole() {
+//            return role;
+//        }
+//
+//        public void setRole(Role role) {
+//            this.role = role;
+//        }
+
+    public String getRole() {
+        return role;
     }
 
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public Long getBasicInformationId() {
@@ -95,11 +108,11 @@ public class User {
         this.vehicleId = vehicleId;
     }
 
-    public String getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 
