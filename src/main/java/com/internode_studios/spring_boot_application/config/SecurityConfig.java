@@ -41,6 +41,7 @@ public class SecurityConfig {
                 // Only allow admin access to role endpoints
                 .requestMatchers("/api/roles/**").hasAuthority("admin")
                 .requestMatchers("/api/cities/**").hasAuthority("admin")
+                .requestMatchers("/api/rideTypes/**").hasAuthority("admin")
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
