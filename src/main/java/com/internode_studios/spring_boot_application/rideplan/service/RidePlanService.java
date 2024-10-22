@@ -75,29 +75,29 @@ public class RidePlanService {
         if (ridePlan != null) {
             // Update fields
             //ridePlan.setUserId(ridePlanDetails.getUserId());
-            ridePlan.setDriverId(ridePlanDetails.getDriverId());
-            ridePlan.setRole(ridePlanDetails.getRole());
-            ridePlan.setRideTypeId(ridePlanDetails.getRideTypeId());
-            ridePlan.setDate(ridePlanDetails.getDate());
-            ridePlan.setStuff(ridePlanDetails.getStuff());
-            ridePlan.setBagsCount(ridePlanDetails.getBagsCount());
-            ridePlan.setPickUpLocation(ridePlanDetails.getPickUpLocation());
-            ridePlan.setDropOffLocation(ridePlanDetails.getDropOffLocation());
-            ridePlan.setCityId(ridePlanDetails.getCityId());
-            ridePlan.setTourDays(ridePlanDetails.getTourDays());
-            ridePlan.setMeal(ridePlanDetails.isMeal());
-            ridePlan.setSeats(ridePlanDetails.getSeats());
-            ridePlan.setSeatsAvailable(ridePlanDetails.getSeatsAvailable());
-            ridePlan.setSeatsReserved(ridePlanDetails.getSeatsReserved());
-            ridePlan.setVisitingPoints(ridePlanDetails.getVisitingPoints());
-            ridePlan.setPets(ridePlanDetails.isPets());
-            ridePlan.setSmoke(ridePlanDetails.isSmoke());
-            ridePlan.setAc(ridePlanDetails.isAc());
-            ridePlan.setFare(ridePlanDetails.getFare());
-            ridePlan.setDriverQuotedFare(ridePlanDetails.getDriverQuotedFare());
-            ridePlan.setPartnerQuotedFare(ridePlanDetails.getPartnerQuotedFare());
+//            ridePlan.setDriverId(ridePlanDetails.getDriverId());
+//            ridePlan.setRole(ridePlanDetails.getRole());
+//            ridePlan.setRideTypeId(ridePlanDetails.getRideTypeId());
+//            ridePlan.setDate(ridePlanDetails.getDate());
+//            ridePlan.setStuff(ridePlanDetails.getStuff());
+//            ridePlan.setBagsCount(ridePlanDetails.getBagsCount());
+//            ridePlan.setPickUpLocation(ridePlanDetails.getPickUpLocation());
+//            ridePlan.setDropOffLocation(ridePlanDetails.getDropOffLocation());
+//            ridePlan.setCityId(ridePlanDetails.getCityId());
+//            ridePlan.setTourDays(ridePlanDetails.getTourDays());
+//            ridePlan.setMeal(ridePlanDetails.isMeal());
+//            ridePlan.setSeats(ridePlanDetails.getSeats());
+//            ridePlan.setSeatsAvailable(ridePlanDetails.getSeatsAvailable());
+//            ridePlan.setSeatsReserved(ridePlanDetails.getSeatsReserved());
+//            ridePlan.setVisitingPoints(ridePlanDetails.getVisitingPoints());
+//            ridePlan.setPets(ridePlanDetails.isPets());
+//            ridePlan.setSmoke(ridePlanDetails.isSmoke());
+//            ridePlan.setAc(ridePlanDetails.isAc());
+            //ridePlan.setFare(ridePlanDetails.getFare());
+            //ridePlan.setDriverQuotedFare(ridePlanDetails.getDriverQuotedFare());
+            //ridePlan.setPartnerQuotedFare(ridePlanDetails.getPartnerQuotedFare());
             ridePlan.setRideStatus(ridePlanDetails.getRideStatus());
-            ridePlan.setNote(ridePlanDetails.getNote());
+            //ridePlan.setNote(ridePlanDetails.getNote());
 
             return ridePlanRepository.save(ridePlan);
         }

@@ -114,4 +114,9 @@ public class UserService {
         }
         return null;
     }
+
+    // Method to get all users
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 }

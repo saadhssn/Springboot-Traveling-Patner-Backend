@@ -1,4 +1,4 @@
-package com.internode_studios.spring_boot_application.config;
+package com.internode_studios.spring_boot_application.Jwt.config;
 
 import com.internode_studios.spring_boot_application.Jwt.filter.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.internode_studios.spring_boot_application.config;
+package com.internode_studios.spring_boot_application.Jwt.config;
 
 import io.swagger.v3.oas.models.Components;
 import org.springdoc.core.models.GroupedOpenApi;
