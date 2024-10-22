@@ -1,7 +1,9 @@
 package com.internode_studios.spring_boot_application.rideplan.service;
 
+import com.internode_studios.spring_boot_application.availabletaxis.model.AvailableTaxi;
 import com.internode_studios.spring_boot_application.city.model.City;
 import com.internode_studios.spring_boot_application.city.repository.CityRepository;
+import com.internode_studios.spring_boot_application.rideplan.dto.RidePlanDTO;
 import com.internode_studios.spring_boot_application.rideplan.model.RidePlan;
 import com.internode_studios.spring_boot_application.rideplan.repository.RidePlanRepository;
 import com.internode_studios.spring_boot_application.ridetype.model.RideType;
@@ -69,6 +71,36 @@ public class RidePlanService {
         return ridePlanRepository.findById(id);
     }
 
+    public Optional<RidePlanDTO> getRidePlanByIdWithDetails(Long id) {
+        Optional<RidePlan> ridePlanOpt = ridePlanRepository.findById(id);
+
+        if (ridePlanOpt.isPresent()) {
+            RidePlan ridePlan = ridePlanOpt.get();
+
+            // Fetching the partner (User) by userId
+            Optional<User> partnerOpt = userRepository.findById(ridePlan.getUserId());
+
+            // Fetching the driver (User) by driverId
+            Optional<User> driverOpt = userRepository.findById(ridePlan.getDriverId());
+
+            // Fetching the city by cityId
+            Optional<City> cityOpt = cityRepository.findById(ridePlan.getCityId());
+
+            // Fetching the ride type by rideTypeId
+            Optional<RideType> rideTypeOpt = rideTypeRepository.findById(ridePlan.getRideTypeId());
+
+            if (partnerOpt.isPresent() && driverOpt.isPresent() && cityOpt.isPresent() && rideTypeOpt.isPresent()) {
+                User partner = partnerOpt.get();
+                User driver = driverOpt.get();
+                City city = cityOpt.get();
+                RideType rideType = rideTypeOpt.get();
+
+                return Optional.of(new RidePlanDTO(ridePlan, partner, driver, city, rideType));
+            }
+        }
+        return Optional.empty();
+    }
+
     // Update RidePlan by ID
     public RidePlan updateRidePlan(Long id, RidePlan ridePlanDetails) {
         RidePlan ridePlan = ridePlanRepository.findById(id).orElse(null);
@@ -108,4 +140,5 @@ public class RidePlanService {
     public void deleteRidePlan(Long id) {
         ridePlanRepository.deleteById(id);
     }
+
 }

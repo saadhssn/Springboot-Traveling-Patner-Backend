@@ -1,5 +1,6 @@
 package com.internode_studios.spring_boot_application.rideplan.controller;
 
+import com.internode_studios.spring_boot_application.rideplan.dto.RidePlanDTO;
 import com.internode_studios.spring_boot_application.rideplan.model.RidePlan;
 import com.internode_studios.spring_boot_application.rideplan.service.RidePlanService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +35,14 @@ public class RidePlanController {
         return ResponseEntity.ok(ridePlans);
     }
 
-    // Get RidePlan by ID
     @GetMapping("/getById/{id}")
     public ResponseEntity<?> getRidePlanById(@PathVariable Long id) {
-        Optional<RidePlan> ridePlan = ridePlanService.getRidePlanById(id);
-        return ridePlan.map(rp -> ResponseEntity.ok((Object) rp))
-                .orElseGet(() -> ResponseEntity.status(404).body("RidePlan not found"));
+        Optional<RidePlanDTO> ridePlanDTO = ridePlanService.getRidePlanByIdWithDetails(id);
+
+        return ridePlanDTO.map(rp -> ResponseEntity.ok((Object) rp))
+                .orElseGet(() -> ResponseEntity.status(404).body("RidePlan not found or details do not match"));
     }
+
 
     // Update RidePlan
     @PutMapping("/update/{id}")
