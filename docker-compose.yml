@@ -28,6 +28,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/MYDB2
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: 12345
+      SOCKETIO_PORT: 9092
+      SOCKETIO_HOSTNAME: "0.0.0.0"
     depends_on:
       - db
     networks:
