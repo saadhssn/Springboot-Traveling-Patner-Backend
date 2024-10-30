@@ -1,11 +1,11 @@
 package com.internode_studios.spring_boot_application.riderequest.controller;
 
-import com.internode_studios.spring_boot_application.rideplan.model.RidePlan;
 import com.internode_studios.spring_boot_application.riderequest.model.RideRequest;
 import com.internode_studios.spring_boot_application.riderequest.service.RideRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 
