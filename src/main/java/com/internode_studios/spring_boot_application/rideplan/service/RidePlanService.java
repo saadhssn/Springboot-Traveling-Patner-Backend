@@ -13,6 +13,9 @@ import com.internode_studios.spring_boot_application.user.repository.UserReposit
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,15 +36,17 @@ public class RidePlanService {
 
     // Create a new RidePlan
     public RidePlan createRidePlan(RidePlan ridePlan) throws IllegalArgumentException {
-        // Validate userId is a partner
+        // Validate userId is either a partner or a driver
         Optional<User> user = userRepository.findByIdAndRole(ridePlan.getUserId(), "partner");
-        if (user.isEmpty()) {
-            throw new IllegalArgumentException("Invalid userId: User must have the role 'partner'.");
+        Optional<User> driver = userRepository.findByIdAndRole(ridePlan.getUserId(), "driver");
+
+        if (user.isEmpty() && driver.isEmpty()) {
+            throw new IllegalArgumentException("Invalid userId: User must have the role 'partner' or 'driver'.");
         }
 
         // Validate driverId is a driver
-        Optional<User> driver = userRepository.findByIdAndRole(ridePlan.getDriverId(), "driver");
-        if (driver.isEmpty()) {
+        Optional<User> driverUser = userRepository.findByIdAndRole(ridePlan.getDriverId(), "driver");
+        if (driverUser.isEmpty()) {
             throw new IllegalArgumentException("Invalid driverId: User must have the role 'driver'.");
         }
 
@@ -60,6 +65,7 @@ public class RidePlanService {
         // If both validations pass, create the RidePlan
         return ridePlanRepository.save(ridePlan);
     }
+
 
     // Get all RidePlans
     public List<RidePlan> getAllRidePlans() {
@@ -140,5 +146,12 @@ public class RidePlanService {
     public void deleteRidePlan(Long id) {
         ridePlanRepository.deleteById(id);
     }
+
+    // Get RidePlan by dropOffLocation, date, time, female
+    public List<RidePlan> getRidePlansByCriteria(String dropOffLocation, String date, String time, boolean female) {
+        return ridePlanRepository.findByDropOffLocationAndDateAndTimeAndFemale(dropOffLocation, date, time, female);
+    }
+
+
 
 }

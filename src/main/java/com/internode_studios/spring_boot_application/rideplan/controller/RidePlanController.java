@@ -43,7 +43,6 @@ public class RidePlanController {
                 .orElseGet(() -> ResponseEntity.status(404).body("RidePlan not found or details do not match"));
     }
 
-
     // Update RidePlan
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateRidePlan(@PathVariable Long id, @RequestBody RidePlan ridePlanDetails) {
@@ -64,5 +63,16 @@ public class RidePlanController {
             return ResponseEntity.ok("RidePlan deleted successfully");
         }
         return ResponseEntity.status(404).body("RidePlan not found");
+    }
+
+    // Get RidePlans by dropOffLocation, date, time, female
+    @GetMapping("/search")
+    public ResponseEntity<List<RidePlan>> getRidePlansByCriteria(
+            @RequestParam String dropOffLocation,
+            @RequestParam String date,
+            @RequestParam String time,
+            @RequestParam boolean female) {
+        List<RidePlan> ridePlans = ridePlanService.getRidePlansByCriteria(dropOffLocation, date, time, female);
+        return ResponseEntity.ok(ridePlans);
     }
 }

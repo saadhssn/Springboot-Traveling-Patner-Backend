@@ -158,8 +158,34 @@ public class AvailableTaxiController {
 //                .orElseGet(() -> ResponseEntity.status(404).body("AvailableTaxi not found or does not match the criteria"));
 //    }
 
-    @GetMapping("/getByIdOnlineOffline/{id}")
-    public ResponseEntity<Object> getAvailableTaxiById(
+        @GetMapping("/getByIdOnlineOffline/{id}")
+        public ResponseEntity<Object> getAvailableTaxiById(
+                @PathVariable Long id,
+                @RequestParam String gender,
+                @RequestParam(required = false) String rideStatus, // Make this optional
+                @RequestParam Long cityId) {
+
+            // If rideStatus is provided, validate it
+            if (rideStatus != null && !rideStatus.equals("online") && !rideStatus.equals("offline")) {
+                return ResponseEntity.status(400).body("Only 'online' or 'offline' rideStatus is supported");
+            }
+
+            Optional<AvailableTaxiDTO> availableTaxi;
+
+            // Check if rideStatus is present
+            if (rideStatus != null) {
+                availableTaxi = availableTaxiService.getAvailableTaxiByIdAndStatusWithDriver(id, gender, rideStatus, cityId);
+            } else {
+                // If rideStatus is not provided, fetch the taxi without the status filter
+                availableTaxi = availableTaxiService.findByIdAndGenderAndCityId(id, gender, cityId);
+            }
+
+            return availableTaxi.map(at -> ResponseEntity.ok((Object) at))
+                    .orElseGet(() -> ResponseEntity.status(404).body("AvailableTaxi not found or does not match the criteria"));
+        }
+
+    @GetMapping("/getByIdOnlineOfflinePartner/{id}")
+    public ResponseEntity<Object> getAvailableTaxiByIdPartner(
             @PathVariable Long id,
             @RequestParam String gender,
             @RequestParam(required = false) String rideStatus, // Make this optional
@@ -174,7 +200,7 @@ public class AvailableTaxiController {
 
         // Check if rideStatus is present
         if (rideStatus != null) {
-            availableTaxi = availableTaxiService.getAvailableTaxiByIdAndStatusWithDriver(id, gender, rideStatus, cityId);
+            availableTaxi = availableTaxiService.findByIdAndGenderAndCityIdPartner(id, gender, cityId);
         } else {
             // If rideStatus is not provided, fetch the taxi without the status filter
             availableTaxi = availableTaxiService.findByIdAndGenderAndCityId(id, gender, cityId);

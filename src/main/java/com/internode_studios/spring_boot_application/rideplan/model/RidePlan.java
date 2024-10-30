@@ -23,9 +23,8 @@ public class RidePlan {
     @Column(name = "ride_type_id", nullable = false)
     private Long rideTypeId;
 
-    @Temporal(TemporalType.DATE)
     @Column(name = "date", nullable = true)
-    private Date date;
+    private String date; // Changed to String for flexible date format
 
     @Column(name = "stuff", nullable = true)
     private int stuff;
@@ -81,10 +80,14 @@ public class RidePlan {
     @Column(name = "ride_status", nullable = true)
     private String rideStatus;
 
+    @Column(name = "female", nullable = true)
+    private boolean female;
+
+    @Column(name = "time", nullable = true)
+    private String time; // Changed to String for flexible time format
+
     @Column(name = "note")
     private String note;
-
-    // Getters and Setters
 
     public Long getId() {
         return id;
@@ -126,11 +129,11 @@ public class RidePlan {
         this.rideTypeId = rideTypeId;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -276,6 +279,22 @@ public class RidePlan {
 
     public void setRideStatus(String rideStatus) {
         this.rideStatus = rideStatus;
+    }
+
+    public boolean isFemale() {
+        return female;
+    }
+
+    public void setFemale(boolean female) {
+        this.female = female;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getNote() {

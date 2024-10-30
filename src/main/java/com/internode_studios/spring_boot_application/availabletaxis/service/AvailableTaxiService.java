@@ -134,4 +134,21 @@ public class AvailableTaxiService {
         }
         return Optional.empty();
     }
+
+    // Get AvailableTaxi by ID, gender, and cityId, including user details Partner
+    public Optional<AvailableTaxiDTO> findByIdAndGenderAndCityIdPartner(Long id, String gender, Long cityId) {
+        Optional<AvailableTaxi> availableTaxiOpt = availableTaxiRepository.findByIdAndGenderAndCityId(id, gender, cityId);
+
+        if (availableTaxiOpt.isPresent()) {
+            AvailableTaxi availableTaxi = availableTaxiOpt.get();
+            Optional<User> userOpt = userRepository.findById(availableTaxi.getId()); // Assuming availableTaxi has a userId field
+            Optional<City> cityOpt = cityRepository.findById(availableTaxi.getCityId());
+            if (userOpt.isPresent() && cityOpt.isPresent()) {
+                User user = userOpt.get();
+                City city = cityOpt.get();
+                return Optional.of(new AvailableTaxiDTO(availableTaxi, user, city));
+            }
+        }
+        return Optional.empty();
+    }
 }

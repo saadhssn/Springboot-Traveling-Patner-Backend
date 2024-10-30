@@ -9,6 +9,7 @@ public class AvailableTaxiDTO {
 
     private AvailableTaxi availableTaxi;
     private User driver;
+    private User user;
     private City city;
 
     public AvailableTaxiDTO(AvailableTaxi availableTaxi, User driver, City city) {
