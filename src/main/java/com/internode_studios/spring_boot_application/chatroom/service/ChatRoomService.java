@@ -2,6 +2,7 @@ package com.internode_studios.spring_boot_application.chatroom.service;
 
 import com.internode_studios.spring_boot_application.chatroom.model.ChatRoom;
 import com.internode_studios.spring_boot_application.chatroom.repository.ChatRoomRepository;
+import com.internode_studios.spring_boot_application.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,14 @@ public class ChatRoomService {
     @Autowired
     private ChatRoomRepository chatRoomRepository;
 
-    public ChatRoom initializeChat(String senderId, String receiverId) {
+    @Autowired
+    private UserRepository userRepository;
+
+    public ChatRoom initializeChat(Long senderId, Long receiverId) {
+        if (!userRepository.existsById(senderId) || !userRepository.existsById(receiverId)) {
+            throw new RuntimeException("Both sender and receiver must be valid users.");
+        }
+
         return chatRoomRepository.findBySenderIdAndReceiverId(senderId, receiverId)
                 .orElseGet(() -> {
                     ChatRoom newChatRoom = new ChatRoom();
@@ -23,25 +31,21 @@ public class ChatRoomService {
                 });
     }
 
-    public ChatRoom sendMessage(Long chatRoomId, String senderId, String messageContent, String message) {
+    public ChatRoom sendMessage(Long chatRoomId, Long senderId, String messageContent) {
+        if (!userRepository.existsById(senderId)) {
+            throw new RuntimeException("Sender must be a valid user.");
+        }
+
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new RuntimeException("Chat room not found"));
 
-        // Determine the receiverId based on existing chat room participants
-        String receiverId = chatRoom.getSenderId().equals(senderId) ? chatRoom.getReceiverId() : chatRoom.getSenderId();
+        Long receiverId = chatRoom.getSenderId().equals(senderId) ? chatRoom.getReceiverId() : chatRoom.getSenderId();
 
-        // Log for debugging
-        System.out.println("Sender ID: " + senderId + ", Receiver ID: " + receiverId + ", Message: " + messageContent);
-
-        // Create a new message with both senderId and receiverId
         ChatRoom.Message newMessage = new ChatRoom.Message(senderId, receiverId, messageContent);
         chatRoom.getMessages().add(newMessage);
 
-        // Save the updated chat room
         return chatRoomRepository.save(chatRoom);
     }
-
-
 
     public ChatRoom getChatRoomMessages(Long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId)
@@ -51,20 +55,4 @@ public class ChatRoomService {
     public List<ChatRoom> getAllChatRooms() {
         return chatRoomRepository.findAll();
     }
-
-
-//    public MessageResponseDTO sendMessage(Long chatRoomId, String senderId, String message) {
-//        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
-//                .orElseThrow(() -> new RuntimeException("Chat room not found"));
-//
-//        // Create and add the new message to the chat room
-//        ChatRoom.Message newMessage = new ChatRoom.Message(senderId, message, new Date());
-//        chatRoom.getMessages().add(newMessage);
-//        chatRoomRepository.save(chatRoom);
-//
-//        // Return the message as a MessageResponseDTO with additional details
-//        return new MessageResponseDTO(chatRoom.getSenderId(), chatRoom.getReceiverId(), newMessage.getMessage(), newMessage.getTimestamp());
-//    }
-
-
 }

@@ -20,9 +20,8 @@ public class ChatRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String senderId;
-
-    private String receiverId;
+    private Long senderId;   // Changed from String to Long
+    private Long receiverId; // Changed from String to Long
 
     @ElementCollection
     @CollectionTable(name = "chat_room_messages", joinColumns = @JoinColumn(name = "chat_room_id"))
@@ -33,14 +32,14 @@ public class ChatRoom {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Message {
-        private String senderId;     // Ensure these fields are defined
-        private String receiverId;   // Ensure these fields are defined
+        private Long senderId;    // Changed from String to Long
+        private Long receiverId;  // Changed from String to Long
         private String message;
 
         @Temporal(TemporalType.TIMESTAMP)
         private Date timestamp = new Date();
 
-        public Message(String senderId, String receiverId, String message) {
+        public Message(Long senderId, Long receiverId, String message) {
             this.senderId = senderId;
             this.receiverId = receiverId;
             this.message = message;

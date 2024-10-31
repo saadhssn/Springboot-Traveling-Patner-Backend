@@ -24,15 +24,9 @@ public class ChatRoomController {
 
     @PostMapping("/messages/{chatRoomId}")
     public ResponseEntity<ChatRoom> sendMessage(@PathVariable Long chatRoomId, @RequestBody ChatMessage messageRequest) {
-        // Remove the additional parameter 'data.getMessage()'
-        ChatRoom updatedChatRoom = chatRoomService.sendMessage(
-                chatRoomId,
-                messageRequest.getSenderId(),
-                messageRequest.getMessage(),
-                messageRequest.getMessage());
+        ChatRoom updatedChatRoom = chatRoomService.sendMessage(chatRoomId, messageRequest.getSenderId(), messageRequest.getMessage());
         return ResponseEntity.ok(updatedChatRoom);
     }
-
 
     @GetMapping("/messages/{chatRoomId}")
     public ResponseEntity<ChatRoom> getChatRoomMessages(@PathVariable Long chatRoomId) {

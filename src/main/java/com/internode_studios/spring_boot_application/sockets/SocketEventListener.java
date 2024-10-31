@@ -27,7 +27,11 @@ public class SocketEventListener {
             @Override
             public void onData(SocketIOClient client, ChatMessage data, AckRequest ackRequest) {
                 // Send the message and retrieve the updated chat room
-                ChatRoom chatRoom = chatRoomService.sendMessage(data.getChatRoomId(), data.getSenderId(), data.getReceiverId(), data.getMessage());
+                ChatRoom chatRoom = chatRoomService.sendMessage(
+                        data.getChatRoomId(),
+                        data.getSenderId(),
+                        data.getMessage() // Only three parameters
+                );
 
                 // Broadcast the updated chat room information to all clients listening to the "chat" event
                 socketIOServer.getBroadcastOperations().sendEvent("chat", chatRoom);
