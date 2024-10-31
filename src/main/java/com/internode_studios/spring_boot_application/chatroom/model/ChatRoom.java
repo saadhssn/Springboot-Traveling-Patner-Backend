@@ -33,15 +33,16 @@ public class ChatRoom {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Message {
-        private String sender;
+        private String senderId;     // Ensure these fields are defined
+        private String receiverId;   // Ensure these fields are defined
         private String message;
 
         @Temporal(TemporalType.TIMESTAMP)
         private Date timestamp = new Date();
 
-        // Constructor for convenience
-        public Message(String sender, String message) {
-            this.sender = sender;
+        public Message(String senderId, String receiverId, String message) {
+            this.senderId = senderId;
+            this.receiverId = receiverId;
             this.message = message;
             this.timestamp = new Date(); // Set timestamp to current date
         }

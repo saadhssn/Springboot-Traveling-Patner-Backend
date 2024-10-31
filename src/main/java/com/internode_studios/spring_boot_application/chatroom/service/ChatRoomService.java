@@ -5,8 +5,6 @@ import com.internode_studios.spring_boot_application.chatroom.repository.ChatRoo
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,14 +23,25 @@ public class ChatRoomService {
                 });
     }
 
-    public ChatRoom sendMessage(Long chatRoomId, String senderId, String message) {
+    public ChatRoom sendMessage(Long chatRoomId, String senderId, String messageContent, String message) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new RuntimeException("Chat room not found"));
 
-        ChatRoom.Message newMessage = new ChatRoom.Message(senderId, message, new Date());
+        // Determine the receiverId based on existing chat room participants
+        String receiverId = chatRoom.getSenderId().equals(senderId) ? chatRoom.getReceiverId() : chatRoom.getSenderId();
+
+        // Log for debugging
+        System.out.println("Sender ID: " + senderId + ", Receiver ID: " + receiverId + ", Message: " + messageContent);
+
+        // Create a new message with both senderId and receiverId
+        ChatRoom.Message newMessage = new ChatRoom.Message(senderId, receiverId, messageContent);
         chatRoom.getMessages().add(newMessage);
+
+        // Save the updated chat room
         return chatRoomRepository.save(chatRoom);
     }
+
+
 
     public ChatRoom getChatRoomMessages(Long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId)
@@ -42,4 +51,20 @@ public class ChatRoomService {
     public List<ChatRoom> getAllChatRooms() {
         return chatRoomRepository.findAll();
     }
+
+
+//    public MessageResponseDTO sendMessage(Long chatRoomId, String senderId, String message) {
+//        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+//                .orElseThrow(() -> new RuntimeException("Chat room not found"));
+//
+//        // Create and add the new message to the chat room
+//        ChatRoom.Message newMessage = new ChatRoom.Message(senderId, message, new Date());
+//        chatRoom.getMessages().add(newMessage);
+//        chatRoomRepository.save(chatRoom);
+//
+//        // Return the message as a MessageResponseDTO with additional details
+//        return new MessageResponseDTO(chatRoom.getSenderId(), chatRoom.getReceiverId(), newMessage.getMessage(), newMessage.getTimestamp());
+//    }
+
+
 }

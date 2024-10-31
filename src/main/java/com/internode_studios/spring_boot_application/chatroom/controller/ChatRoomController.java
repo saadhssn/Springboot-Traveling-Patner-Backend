@@ -1,5 +1,6 @@
 package com.internode_studios.spring_boot_application.chatroom.controller;
 
+import com.internode_studios.spring_boot_application.chatroom.model.ChatMessage;
 import com.internode_studios.spring_boot_application.chatroom.model.ChatRoom;
 import com.internode_studios.spring_boot_application.chatroom.service.ChatRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,16 @@ public class ChatRoomController {
     }
 
     @PostMapping("/messages/{chatRoomId}")
-    public ResponseEntity<ChatRoom> sendMessage(@PathVariable Long chatRoomId, @RequestBody ChatRoom.Message messageRequest) {
-        ChatRoom updatedChatRoom = chatRoomService.sendMessage(chatRoomId, messageRequest.getSender(), messageRequest.getMessage());
+    public ResponseEntity<ChatRoom> sendMessage(@PathVariable Long chatRoomId, @RequestBody ChatMessage messageRequest) {
+        // Remove the additional parameter 'data.getMessage()'
+        ChatRoom updatedChatRoom = chatRoomService.sendMessage(
+                chatRoomId,
+                messageRequest.getSenderId(),
+                messageRequest.getMessage(),
+                messageRequest.getMessage());
         return ResponseEntity.ok(updatedChatRoom);
     }
+
 
     @GetMapping("/messages/{chatRoomId}")
     public ResponseEntity<ChatRoom> getChatRoomMessages(@PathVariable Long chatRoomId) {

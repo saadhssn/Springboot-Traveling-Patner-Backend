@@ -23,13 +23,17 @@ public class SocketEventListener {
 
     @EventListener(ContextRefreshedEvent.class)
     public void init() {
-        socketIOServer.addListeners(new DataListener<ChatMessage>() {
+        socketIOServer.addEventListener("chat", ChatMessage.class, new DataListener<ChatMessage>() {
             @Override
-            public void onData(SocketIOClient client, ChatMessage data, AckRequest ackRequest) throws Exception {
-                ChatRoom chatRoom = chatRoomService.sendMessage(data.getChatRoomId(), data.getSenderId(), data.getMessage());
+            public void onData(SocketIOClient client, ChatMessage data, AckRequest ackRequest) {
+                // Send the message and retrieve the updated chat room
+                ChatRoom chatRoom = chatRoomService.sendMessage(data.getChatRoomId(), data.getSenderId(), data.getReceiverId(), data.getMessage());
+
+                // Broadcast the updated chat room information to all clients listening to the "chat" event
                 socketIOServer.getBroadcastOperations().sendEvent("chat", chatRoom);
             }
         });
+
         socketIOServer.start();
     }
 }
