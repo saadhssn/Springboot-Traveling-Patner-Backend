@@ -29,6 +29,7 @@ public class RideRequestService {
     @Autowired
     private RidePlanRepository ridePlanRepository;
 
+
     public RideRequest createRideRequest(RideRequest rideRequest) throws IllegalArgumentException {
         // Validate driverId is a driver
         if (rideRequest.getDriverId() != null) {
@@ -60,16 +61,19 @@ public class RideRequestService {
 
         RidePlan ridePlan = ridePlanOpt.get();
 
-        // Check if enough seats are available
-        if (rideRequest.getSeatsReserved() > ridePlan.getSeatsAvailable()) {
-            throw new IllegalArgumentException("Not enough seats available. Seats reserved: "
-                    + rideRequest.getSeatsReserved() + ", Seats available: " + ridePlan.getSeatsAvailable());
-        }
+        // Only proceed with seat reservation if the rideStatus is "confirmed"
+        if ("confirmed".equalsIgnoreCase(rideRequest.getRideStatus())) {
+            // Check if enough seats are available
+            if (rideRequest.getSeatsReserved() > ridePlan.getSeatsAvailable()) {
+                throw new IllegalArgumentException("Not enough seats available. Seats reserved: "
+                        + rideRequest.getSeatsReserved() + ", Seats available: " + ridePlan.getSeatsAvailable());
+            }
 
-        // Update the ride plan with the reserved seats
-        ridePlan.setSeatsReserved(ridePlan.getSeatsReserved() + rideRequest.getSeatsReserved());
-        ridePlan.setSeatsAvailable(ridePlan.getSeatsAvailable() - rideRequest.getSeatsReserved());
-        ridePlanRepository.save(ridePlan);
+            // Update the ride plan with the reserved seats
+            ridePlan.setSeatsReserved(ridePlan.getSeatsReserved() + rideRequest.getSeatsReserved());
+            ridePlan.setSeatsAvailable(ridePlan.getSeatsAvailable() - rideRequest.getSeatsReserved());
+            ridePlanRepository.save(ridePlan);
+        }
 
         // Set pickUpLocation and dropOffLocation from the RidePlan
         rideRequest.setPickUpLocation(ridePlan.getPickUpLocation());
@@ -98,10 +102,6 @@ public class RideRequestService {
             RideRequest rideRequest = optionalRideRequest.get();
 
             // Update fields as necessary
-//            rideRequest.setDriverId(rideRequestDetails.getDriverId());
-//            rideRequest.setPartnerId(rideRequestDetails.getPartnerId());
-//            rideRequest.setRideTypeId(rideRequestDetails.getRideTypeId());
-//            rideRequest.setRidePlanId(rideRequestDetails.getRidePlanId());
             rideRequest.setRideStatus(rideRequestDetails.getRideStatus());
 
             // Validate updated fields if necessary
@@ -128,15 +128,33 @@ public class RideRequestService {
             }
 
             // Validate ridePlanId
-            Optional<RidePlan> ridePlan = ridePlanRepository.findById(rideRequest.getRidePlanId());
-            if (ridePlan.isEmpty()) {
+            Optional<RidePlan> ridePlanOpt = ridePlanRepository.findById(rideRequest.getRidePlanId());
+            if (ridePlanOpt.isEmpty()) {
                 throw new IllegalArgumentException("Invalid ridePlanId: RidePlan must be present in the 'ride_plan' table.");
             }
 
+            RidePlan ridePlan = ridePlanOpt.get();
+
+            // Only proceed with seat reservation if the rideStatus is "confirmed"
+            if ("confirmed".equalsIgnoreCase(rideRequest.getRideStatus())) {
+                // Check if enough seats are available
+                if (rideRequest.getSeatsReserved() > ridePlan.getSeatsAvailable()) {
+                    throw new IllegalArgumentException("Not enough seats available. Seats reserved: "
+                            + rideRequest.getSeatsReserved() + ", Seats available: " + ridePlan.getSeatsAvailable());
+                }
+
+                // Update the ride plan with the reserved seats
+                ridePlan.setSeatsReserved(ridePlan.getSeatsReserved() + rideRequest.getSeatsReserved());
+                ridePlan.setSeatsAvailable(ridePlan.getSeatsAvailable() - rideRequest.getSeatsReserved());
+                ridePlanRepository.save(ridePlan);
+            }
+
+            // Save and return updated RideRequest
             return rideRequestRepository.save(rideRequest);
         }
         return null;
     }
+
 
     // Delete RideRequest by ID
     public void deleteRideRequest(Long id) {
