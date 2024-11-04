@@ -65,14 +65,36 @@ public class RidePlanController {
         return ResponseEntity.status(404).body("RidePlan not found");
     }
 
-    // Get RidePlans by dropOffLocation, date, time, female
-    @GetMapping("/search")
-    public ResponseEntity<List<RidePlan>> getRidePlansByCriteria(
+//    // Get RidePlans by dropOffLocation, date, time, female
+//    @GetMapping("/search")
+//    public ResponseEntity<List<RidePlan>> getRidePlansByCriteria(
+//            @RequestParam String dropOffLocation,
+//            @RequestParam String date,
+//            @RequestParam String time,
+//            @RequestParam boolean female) {
+//        List<RidePlan> ridePlans = ridePlanService.getRidePlansByCriteria(dropOffLocation, date, time, female);
+//        return ResponseEntity.ok(ridePlans);
+//    }
+
+    // Endpoint to search RidePlans with role "driver"
+    @GetMapping("/searchDriver")
+    public ResponseEntity<List<RidePlan>> getRidePlansForDriver(
             @RequestParam String dropOffLocation,
             @RequestParam String date,
             @RequestParam String time,
             @RequestParam boolean female) {
-        List<RidePlan> ridePlans = ridePlanService.getRidePlansByCriteria(dropOffLocation, date, time, female);
+        List<RidePlan> ridePlans = ridePlanService.getRidePlansForDriver(dropOffLocation, date, time, female);
+        return ResponseEntity.ok(ridePlans);
+    }
+
+    // Endpoint to search RidePlans with role "partner"
+    @GetMapping("/searchPartner")
+    public ResponseEntity<List<RidePlan>> getRidePlansForPartner(
+            @RequestParam String dropOffLocation,
+            @RequestParam String date,
+            @RequestParam String time,
+            @RequestParam boolean female) {
+        List<RidePlan> ridePlans = ridePlanService.getRidePlansForPartner(dropOffLocation, date, time, female);
         return ResponseEntity.ok(ridePlans);
     }
 }

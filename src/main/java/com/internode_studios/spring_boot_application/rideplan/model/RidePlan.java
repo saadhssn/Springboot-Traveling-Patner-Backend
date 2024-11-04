@@ -11,10 +11,10 @@ public class RidePlan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id", nullable = true)
     private Long userId;
 
-    @Column(name = "driver_id", nullable = false)
+    @Column(name = "driver_id", nullable = true)
     private Long driverId;
 
     @Column(name = "role", nullable = false)

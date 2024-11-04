@@ -10,7 +10,11 @@ import com.internode_studios.spring_boot_application.user.model.User;
 import com.internode_studios.spring_boot_application.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+// Update RideRequest by ID
+import org.springframework.transaction.annotation.Transactional;
 
+
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,6 +76,7 @@ public class RideRequestService {
             // Update the ride plan with the reserved seats
             ridePlan.setSeatsReserved(ridePlan.getSeatsReserved() + rideRequest.getSeatsReserved());
             ridePlan.setSeatsAvailable(ridePlan.getSeatsAvailable() - rideRequest.getSeatsReserved());
+            ridePlan.setFare(ridePlan.getFare());
             ridePlanRepository.save(ridePlan);
         }
 
@@ -95,7 +100,11 @@ public class RideRequestService {
         return rideRequestRepository.findById(id);
     }
 
-    // Update RideRequest by ID
+    public List<RideRequest> getRideRequestsByRidePlanIdAndDate(Long ridePlanId, String date) {
+        return rideRequestRepository.findByRidePlanIdAndDate(ridePlanId, date);
+    }
+
+    @Transactional
     public RideRequest updateRideRequest(Long id, RideRequest rideRequestDetails) throws IllegalArgumentException {
         Optional<RideRequest> optionalRideRequest = rideRequestRepository.findById(id);
         if (optionalRideRequest.isPresent()) {
@@ -104,7 +113,6 @@ public class RideRequestService {
             // Update fields as necessary
             rideRequest.setRideStatus(rideRequestDetails.getRideStatus());
 
-            // Validate updated fields if necessary
             // Validate driverId
             if (rideRequest.getDriverId() != null) {
                 Optional<User> driver = userRepository.findByIdAndRole(rideRequest.getDriverId(), "driver");
@@ -146,6 +154,14 @@ public class RideRequestService {
                 // Update the ride plan with the reserved seats
                 ridePlan.setSeatsReserved(ridePlan.getSeatsReserved() + rideRequest.getSeatsReserved());
                 ridePlan.setSeatsAvailable(ridePlan.getSeatsAvailable() - rideRequest.getSeatsReserved());
+
+                // Explicitly set fare to trigger an update
+                //ridePlan.setRideStatus(rideRequest.getRideStatus());
+
+                // Explicitly set fare to trigger an update
+                //ridePlan.setFare(rideRequest.getFare());  // Set a specific value if needed, e.g., "150.00 USD"
+
+                // Save the updated RidePlan
                 ridePlanRepository.save(ridePlan);
             }
 
@@ -156,8 +172,34 @@ public class RideRequestService {
     }
 
 
+    // Update Fare by RideRequest ID
+    public RideRequest updateFare(Long id, String newFare) throws IllegalArgumentException {
+        Optional<RideRequest> optionalRideRequest = rideRequestRepository.findById(id);
+        if (optionalRideRequest.isPresent()) {
+            RideRequest rideRequest = optionalRideRequest.get();
+
+            // Update fare
+            rideRequest.setFare(newFare);
+
+            // Save and return updated RideRequest
+            return rideRequestRepository.save(rideRequest);
+        } else {
+            throw new IllegalArgumentException("RideRequest not found with ID: " + id);
+        }
+    }
+
     // Delete RideRequest by ID
     public void deleteRideRequest(Long id) {
         rideRequestRepository.deleteById(id);
+    }
+
+    //Partner
+    public List<RideRequest> getConfirmedRideRequestsForPartner(Long partnerId) {
+        return rideRequestRepository.findByPartnerIdAndRideStatus(partnerId, "confirmed");
+    }
+
+    //Driver
+    public List<RideRequest> getConfirmedRideRequestsForDriver(Long driverId) {
+        return rideRequestRepository.findByDriverIdAndRideStatus(driverId, "confirmed");
     }
 }

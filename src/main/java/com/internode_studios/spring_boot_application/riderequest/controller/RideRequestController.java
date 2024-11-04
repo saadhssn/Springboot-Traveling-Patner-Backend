@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -42,6 +43,13 @@ public class RideRequestController {
                 .orElseGet(() -> ResponseEntity.status(404).body("RideRequest not found"));
     }
 
+    @GetMapping("/byRidePlanAndDate")
+    public List<RideRequest> getRideRequestsByRidePlanAndDate(
+            @RequestParam Long ridePlanId,
+            @RequestParam String date) {
+        return rideRequestService.getRideRequestsByRidePlanIdAndDate(ridePlanId, date);
+    }
+
     // Update RideRequest
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateRideRequest(@PathVariable Long id, @RequestBody RideRequest rideRequestDetails) {
@@ -56,6 +64,23 @@ public class RideRequestController {
         }
     }
 
+    // Update fare only
+    @PutMapping("/updateFare/{id}")
+    public ResponseEntity<?> updateFare(@PathVariable Long id, @RequestBody Map<String, String> request) {
+        try {
+            // Get new fare from request body
+            String newFare = request.get("fare");
+            if (newFare == null) {
+                return ResponseEntity.status(400).body("Fare must be provided in the request body");
+            }
+
+            RideRequest updatedRideRequest = rideRequestService.updateFare(id, newFare);
+            return ResponseEntity.ok(updatedRideRequest);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+
     // Delete RideRequest
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteRideRequest(@PathVariable Long id) {
@@ -65,5 +90,15 @@ public class RideRequestController {
             return ResponseEntity.ok("RideRequest deleted successfully");
         }
         return ResponseEntity.status(404).body("RideRequest not found");
+    }
+
+    @GetMapping("/confirmedByPartner")
+    public List<RideRequest> getConfirmedRideRequestsForPartner(@RequestParam Long partnerId) {
+        return rideRequestService.getConfirmedRideRequestsForPartner(partnerId);
+    }
+
+    @GetMapping("/confirmedByDriver")
+    public List<RideRequest> getConfirmedRideRequestsForDriver(@RequestParam Long driverId) {
+        return rideRequestService.getConfirmedRideRequestsForDriver(driverId);
     }
 }

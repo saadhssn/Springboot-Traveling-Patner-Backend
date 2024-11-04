@@ -34,20 +34,26 @@ public class RidePlanService {
     @Autowired
     private RideTypeRepository rideTypeRepository;
 
-    // Create a new RidePlan
     public RidePlan createRidePlan(RidePlan ridePlan) throws IllegalArgumentException {
-        // Validate userId is either a partner or a driver
-        Optional<User> user = userRepository.findByIdAndRole(ridePlan.getUserId(), "partner");
-        Optional<User> driver = userRepository.findByIdAndRole(ridePlan.getUserId(), "driver");
-
-        if (user.isEmpty() && driver.isEmpty()) {
-            throw new IllegalArgumentException("Invalid userId: User must have the role 'partner' or 'driver'.");
+        // Ensure that either userId or driverId is provided
+        if (ridePlan.getUserId() == null && ridePlan.getDriverId() == null) {
+            throw new IllegalArgumentException("Either userId or driverId must be provided.");
         }
 
-        // Validate driverId is a driver
-        Optional<User> driverUser = userRepository.findByIdAndRole(ridePlan.getDriverId(), "driver");
-        if (driverUser.isEmpty()) {
-            throw new IllegalArgumentException("Invalid driverId: User must have the role 'driver'.");
+        // Validate userId if provided
+        if (ridePlan.getUserId() != null) {
+            Optional<User> user = userRepository.findByIdAndRole(ridePlan.getUserId(), "partner");
+            if (user.isEmpty()) {
+                throw new IllegalArgumentException("Invalid userId: User must have the role 'partner'.");
+            }
+        }
+
+        // Validate driverId if provided
+        if (ridePlan.getDriverId() != null) {
+            Optional<User> driverUser = userRepository.findByIdAndRole(ridePlan.getDriverId(), "driver");
+            if (driverUser.isEmpty()) {
+                throw new IllegalArgumentException("Invalid driverId: User must have the role 'driver'.");
+            }
         }
 
         // Validate cityId
@@ -62,10 +68,9 @@ public class RidePlanService {
             throw new IllegalArgumentException("Invalid rideTypeId: RideType must be present in the 'ridetype' table.");
         }
 
-        // If both validations pass, create the RidePlan
+        // If validations pass, create the RidePlan
         return ridePlanRepository.save(ridePlan);
     }
-
 
     // Get all RidePlans
     public List<RidePlan> getAllRidePlans() {
@@ -148,10 +153,16 @@ public class RidePlanService {
     }
 
     // Get RidePlan by dropOffLocation, date, time, female
-    public List<RidePlan> getRidePlansByCriteria(String dropOffLocation, String date, String time, boolean female) {
-        return ridePlanRepository.findByDropOffLocationAndDateAndTimeAndFemale(dropOffLocation, date, time, female);
+//    public List<RidePlan> getRidePlansByCriteria(String dropOffLocation, String date, String time, boolean female) {
+//        return ridePlanRepository.findByDropOffLocationAndDateAndTimeAndFemale(dropOffLocation, date, time, female);
+//    }
+
+    public List<RidePlan> getRidePlansForDriver(String dropOffLocation, String date, String time, boolean female) {
+        return ridePlanRepository.findByDropOffLocationAndDateAndTimeAndFemaleAndRole(dropOffLocation, date, time, female, "driver");
     }
 
-
+    public List<RidePlan> getRidePlansForPartner(String dropOffLocation, String date, String time, boolean female) {
+        return ridePlanRepository.findByDropOffLocationAndDateAndTimeAndFemaleAndRole(dropOffLocation, date, time, female, "partner");
+    }
 
 }

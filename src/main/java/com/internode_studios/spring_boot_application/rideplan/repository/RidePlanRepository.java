@@ -18,6 +18,9 @@ public interface RidePlanRepository extends JpaRepository<RidePlan, Long> {
     @Override
     Optional<RidePlan> findById(Long id);
 
-    List<RidePlan> findByDropOffLocationAndDateAndTimeAndFemale(
-            String dropOffLocation, String date, String time, boolean female);
+//    List<RidePlan> findByDropOffLocationAndDateAndTimeAndFemale(
+//            String dropOffLocation, String date, String time, boolean female);
+
+    List<RidePlan> findByDropOffLocationAndDateAndTimeAndFemaleAndRole(
+            String dropOffLocation, String date, String time, boolean female, String role);
 }
