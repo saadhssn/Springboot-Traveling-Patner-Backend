@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -201,5 +202,23 @@ public class RideRequestService {
     //Driver
     public List<RideRequest> getConfirmedRideRequestsForDriver(Long driverId) {
         return rideRequestRepository.findByDriverIdAndRideStatus(driverId, "confirmed");
+    }
+
+    public List<RideRequest> getFilteredRideRequests(String status) {
+        LocalDate currentDate = LocalDate.now();
+
+        switch (status.toLowerCase()) {
+            case "requested":
+                // Pending rides for today
+                return rideRequestRepository.findByDateAndRideStatus(currentDate.toString(), "pending");
+            case "upcoming":
+                // Confirmed rides for today
+                return rideRequestRepository.findByDateAndRideStatus(currentDate.toString(), "confirmed");
+            case "past":
+                // Confirmed rides before today
+                return rideRequestRepository.findByDateBeforeAndRideStatus(currentDate.toString(), "confirmed");
+            default:
+                throw new IllegalArgumentException("Invalid status provided. Use 'requested', 'upcoming', or 'past'.");
+        }
     }
 }

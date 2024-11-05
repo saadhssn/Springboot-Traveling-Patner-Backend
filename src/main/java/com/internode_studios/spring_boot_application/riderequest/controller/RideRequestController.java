@@ -101,4 +101,14 @@ public class RideRequestController {
     public List<RideRequest> getConfirmedRideRequestsForDriver(@RequestParam Long driverId) {
         return rideRequestService.getConfirmedRideRequestsForDriver(driverId);
     }
+
+    @GetMapping("/filtered")
+    public ResponseEntity<?> getFilteredRideRequests(@RequestParam String status) {
+        try {
+            List<RideRequest> rideRequests = rideRequestService.getFilteredRideRequests(status);
+            return ResponseEntity.ok(rideRequests);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
 }

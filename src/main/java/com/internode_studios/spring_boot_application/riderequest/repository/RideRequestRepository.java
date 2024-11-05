@@ -14,4 +14,8 @@ public interface RideRequestRepository extends JpaRepository<RideRequest, Long> 
     List<RideRequest> findByDriverIdAndRideStatus(Long driverId, String rideStatus);
 
     List<RideRequest> findByPartnerIdAndRideStatus(Long partnerId, String rideStatus);
+
+    List<RideRequest> findByDateAndRideStatus(String date, String rideStatus);
+
+    List<RideRequest> findByDateBeforeAndRideStatus(String date, String rideStatus);
 }
