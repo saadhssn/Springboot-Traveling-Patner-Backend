@@ -15,4 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByMobileNumberAndRole(String tokenMobileNumber, String admin);
     Optional<User> findByIdAndRole(Long id, String role);
+
+    List<User> findByDeletedFalse(); // Fetch users that are not deleted
 }

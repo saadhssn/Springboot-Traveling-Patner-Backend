@@ -99,4 +99,24 @@ public class UserController {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
+
+    @DeleteMapping("/user/soft-delete/{id}")
+    public ResponseEntity<?> softDeleteUser(@PathVariable Long id) {
+        try {
+            userService.softDeleteUser(id);
+            return ResponseEntity.ok("User soft deleted successfully.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/user/hard-delete/{id}")
+    public ResponseEntity<?> hardDeleteUser(@PathVariable Long id) {
+        try {
+            userService.hardDeleteUser(id);
+            return ResponseEntity.ok("User hard deleted successfully.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
 }
