@@ -35,6 +35,14 @@ public class RidePlanController {
         return ResponseEntity.ok(ridePlans);
     }
 
+//    @GetMapping("/getById/{id}")
+//    public ResponseEntity<?> getRidePlanById(@PathVariable Long id) {
+//        Optional<RidePlanDTO> ridePlanDTO = ridePlanService.getRidePlanByIdWithDetails(id);
+//
+//        return ridePlanDTO.map(rp -> ResponseEntity.ok((Object) rp))
+//                .orElseGet(() -> ResponseEntity.status(404).body("RidePlan not found or details do not match"));
+//    }
+
     @GetMapping("/getById/{id}")
     public ResponseEntity<?> getRidePlanById(@PathVariable Long id) {
         Optional<RidePlanDTO> ridePlanDTO = ridePlanService.getRidePlanByIdWithDetails(id);

@@ -82,32 +82,52 @@ public class RidePlanService {
         return ridePlanRepository.findById(id);
     }
 
+//    public Optional<RidePlanDTO> getRidePlanByIdWithDetails(Long id) {
+//        Optional<RidePlan> ridePlanOpt = ridePlanRepository.findById(id);
+//
+//        if (ridePlanOpt.isPresent()) {
+//            RidePlan ridePlan = ridePlanOpt.get();
+//
+//            // Check for nulls before fetching related entities
+//            Optional<User> partnerOpt = ridePlan.getUserId() != null ? userRepository.findById(ridePlan.getUserId()) : Optional.empty();
+//            Optional<User> driverOpt = ridePlan.getDriverId() != null ? userRepository.findById(ridePlan.getDriverId()) : Optional.empty();
+//            Optional<City> cityOpt = ridePlan.getCityId() != null ? cityRepository.findById(ridePlan.getCityId()) : Optional.empty();
+//            Optional<RideType> rideTypeOpt = ridePlan.getRideTypeId() != null ? rideTypeRepository.findById(ridePlan.getRideTypeId()) : Optional.empty();
+//
+//            // Ensure all required details are present
+//            if (partnerOpt.isPresent() && driverOpt.isPresent() && cityOpt.isPresent() && rideTypeOpt.isPresent()) {
+//                User partner = partnerOpt.get();
+//                User driver = driverOpt.get();
+//                City city = cityOpt.get();
+//                RideType rideType = rideTypeOpt.get();
+//
+//                return Optional.of(new RidePlanDTO(ridePlan, partner, driver, city, rideType));
+//            }
+//        }
+//
+//        return Optional.empty();
+//    }
+
     public Optional<RidePlanDTO> getRidePlanByIdWithDetails(Long id) {
         Optional<RidePlan> ridePlanOpt = ridePlanRepository.findById(id);
 
         if (ridePlanOpt.isPresent()) {
             RidePlan ridePlan = ridePlanOpt.get();
 
-            // Fetching the partner (User) by userId
-            Optional<User> partnerOpt = userRepository.findById(ridePlan.getUserId());
+            // Fetching the partner (User) by userId, or null if not found
+            User partner = ridePlan.getUserId() != null ? userRepository.findById(ridePlan.getUserId()).orElse(null) : null;
 
-            // Fetching the driver (User) by driverId
-            Optional<User> driverOpt = userRepository.findById(ridePlan.getDriverId());
+            // Fetching the driver (User) by driverId, or null if not found
+            User driver = ridePlan.getDriverId() != null ? userRepository.findById(ridePlan.getDriverId()).orElse(null) : null;
 
-            // Fetching the city by cityId
-            Optional<City> cityOpt = cityRepository.findById(ridePlan.getCityId());
+            // Fetching the city by cityId, or null if not found
+            City city = ridePlan.getCityId() != null ? cityRepository.findById(ridePlan.getCityId()).orElse(null) : null;
 
-            // Fetching the ride type by rideTypeId
-            Optional<RideType> rideTypeOpt = rideTypeRepository.findById(ridePlan.getRideTypeId());
+            // Fetching the ride type by rideTypeId, or null if not found
+            RideType rideType = ridePlan.getRideTypeId() != null ? rideTypeRepository.findById(ridePlan.getRideTypeId()).orElse(null) : null;
 
-            if (partnerOpt.isPresent() && driverOpt.isPresent() && cityOpt.isPresent() && rideTypeOpt.isPresent()) {
-                User partner = partnerOpt.get();
-                User driver = driverOpt.get();
-                City city = cityOpt.get();
-                RideType rideType = rideTypeOpt.get();
-
-                return Optional.of(new RidePlanDTO(ridePlan, partner, driver, city, rideType));
-            }
+            // Create a RidePlanDTO with the retrieved information
+            return Optional.of(new RidePlanDTO(ridePlan, partner, driver, city, rideType));
         }
         return Optional.empty();
     }
