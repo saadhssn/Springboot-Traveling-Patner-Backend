@@ -3,6 +3,19 @@ server:
   forward-headers-strategy: framework
 
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 465  # Use 587 for TLS (recommended) or 465 for SSL (you can choose one)
+    username: travelingpartnertravelapp@gmail.com
+    password: wlwr okvr ofom dosx
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: false  # Ensure TLS is enabled
+          ssl:
+            enable: true  # Set to true if using SSL (port 465)
   datasource:
     url: jdbc:postgresql://localhost:5332/MYDB2
     username: root
