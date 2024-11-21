@@ -3,6 +3,7 @@ package com.internode_studios.spring_boot_application.role.controller;
 
 import com.internode_studios.spring_boot_application.role.model.Role;
 import com.internode_studios.spring_boot_application.role.service.RoleService;
+import com.internode_studios.spring_boot_application.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,22 +18,21 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
-    // Create a new role
-    @PostMapping
-    public ResponseEntity<Role> createRole(@RequestBody Role role) {
-        Role createdRole = roleService.createRole(role);
-        return ResponseEntity.ok(createdRole);
+    @PostMapping("/create")
+    public ResponseEntity<?> createRole(@RequestBody Role role) {
+        Role createRole = roleService.createRole(role);
+        return ResponseEntity.ok(createRole);
+
     }
 
-    // Get all roles
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<List<Role>> getAllRoles() {
         List<Role> roles = roleService.getAllRoles();
         return ResponseEntity.ok(roles);
     }
 
     // Get role by ID
-    @GetMapping("/{id}")
+    @GetMapping("/getById/{id}")
     public ResponseEntity<?> getRoleById(@PathVariable Long id) {
         Optional<Role> role = roleService.getRoleById(id);
         return role.map(r -> ResponseEntity.ok((Object) r)) // Cast to Object for compatibility
@@ -41,7 +41,7 @@ public class RoleController {
 
 
     // Update a role
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<?> updateRole(@PathVariable Long id, @RequestBody Role roleDetails) {
         Role updatedRole = roleService.updateRole(id, roleDetails);
         if (updatedRole != null) {
@@ -51,7 +51,7 @@ public class RoleController {
     }
 
     // Delete a role
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteRole(@PathVariable Long id) {
         Optional<Role> role = roleService.getRoleById(id);
         if (role.isPresent()) {

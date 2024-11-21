@@ -1,8 +1,10 @@
 package com.internode_studios.spring_boot_application.basicinformation.service;
 
-
 import com.internode_studios.spring_boot_application.basicinformation.model.BasicInformation;
 import com.internode_studios.spring_boot_application.basicinformation.repository.BasicInformationRepository;
+import com.internode_studios.spring_boot_application.user.model.User;
+import com.internode_studios.spring_boot_application.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +16,28 @@ public class BasicInformationService {
     @Autowired
     private BasicInformationRepository basicInformationRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Transactional
     public BasicInformation createBasicInformation(BasicInformation basicInformation) {
-        return basicInformationRepository.save(basicInformation);
+        User user = userRepository.findById(basicInformation.getUserId()).orElse(null);
+
+        if (user != null) {
+            // Save Basic Information
+            basicInformation = basicInformationRepository.save(basicInformation);
+            System.out.println("Basic Information saved with ID: " + basicInformation.getId());
+
+            // Update user's basicInformationId
+            user.setBasicInformationId(basicInformation.getId());
+            userRepository.save(user);
+
+            System.out.println("User updated with new basicInformationId: " + user.getBasicInformationId());
+            return basicInformation;
+        }
+
+        System.out.println("User not found with ID: " + basicInformation.getUserId());
+        return null;
     }
 
     public List<BasicInformation> getAllBasicInformation() {

@@ -26,6 +26,13 @@ public class OtpService {
         }
     }
 
+    // Method to only update OTP for a specific user
+    public void updateOtp(User user) {
+        String otp = generateRandomOtp();
+        user.setOtp(otp);
+        userRepository.save(user);  // Update OTP without modifying other fields
+    }
+
     // Method to validate OTP
     public boolean validateOtp(String mobileNumber, String otp) {
         User user = userRepository.findByMobileNumberAndOtp(mobileNumber, otp);

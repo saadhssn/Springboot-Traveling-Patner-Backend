@@ -1,5 +1,6 @@
 package com.internode_studios.spring_boot_application.user.model;
 
+import com.internode_studios.spring_boot_application.role.model.Role;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,15 +11,36 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "mobile_number")
     private String mobileNumber;
+
     private String otp;
-    private Long role;
-    private Long basicInformation;
-    private Long license;
-    private Long vehicle;
-    private String status;
+
+//        @ManyToOne
+//        @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
+//        private Role role; // This will be populated from the Role table.
+
+    @Column(name = "role")
+    private String role;
+
+    @Column(name = "basic_information_id")
+    private Long basicInformationId;
+
+    @Column(name = "license_id")
+    private Long licenseId;
+
+    @Column(name = "vehicle_id")
+    private Long vehicleId;
+
+    private Boolean status;
+
+    @Column(name = "remember_token")
     private String rememberToken;
+
+    @Column(name = "device_token")
     private String deviceToken;
+
+    @Column(name = "is_otp_verified")
     private Boolean isOtpVerified = false;
 
     // Getters and Setters
@@ -46,43 +68,51 @@ public class User {
         this.otp = otp;
     }
 
-    public Long getRole() {
+//        public Role getRole() {
+//            return role;
+//        }
+//
+//        public void setRole(Role role) {
+//            this.role = role;
+//        }
+
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Long role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
-    public Long getBasicInformation() {
-        return basicInformation;
+    public Long getBasicInformationId() {
+        return basicInformationId;
     }
 
-    public void setBasicInformation(Long basicInformation) {
-        this.basicInformation = basicInformation;
+    public void setBasicInformationId(Long basicInformationId) {
+        this.basicInformationId = basicInformationId;
     }
 
-    public Long getLicense() {
-        return license;
+    public Long getLicenseId() {
+        return licenseId;
     }
 
-    public void setLicense(Long license) {
-        this.license = license;
+    public void setLicenseId(Long licenseId) {
+        this.licenseId = licenseId;
     }
 
-    public Long getVehicle() {
-        return vehicle;
+    public Long getVehicleId() {
+        return vehicleId;
     }
 
-    public void setVehicle(Long vehicle) {
-        this.vehicle = vehicle;
+    public void setVehicleId(Long vehicleId) {
+        this.vehicleId = vehicleId;
     }
 
-    public String getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 
