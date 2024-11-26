@@ -6,6 +6,7 @@ import com.internode_studios.spring_boot_application.role.repository.RoleReposit
 import com.internode_studios.spring_boot_application.user.model.User;
 import com.internode_studios.spring_boot_application.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,28 @@ public class UserService {
 
     @Autowired
     private OtpService otpService;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+    public String setPassword(Long userId, String password, String confirmPassword) {
+        // Check if passwords match
+        if (!password.equals(confirmPassword)) {
+            throw new IllegalArgumentException("Passwords do not match");
+        }
+
+        // Find the user by ID
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Hash the password before saving
+        String hashedPassword = passwordEncoder.encode(password);
+        user.setPassword(hashedPassword);
+
+        // Save the updated user record
+        userRepository.save(user);
+        return "Password set successfully";
+    }
 
     // Check if an admin user exists
     public boolean isAdminExists() {

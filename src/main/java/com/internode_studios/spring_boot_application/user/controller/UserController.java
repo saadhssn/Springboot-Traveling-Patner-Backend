@@ -99,4 +99,20 @@ public class UserController {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
+
+    @PostMapping("/setpassword")
+    public ResponseEntity<?> setPassword(@RequestBody Map<String, Object> payload) {
+        try {
+            Long userId = ((Number) payload.get("userId")).longValue();
+            String password = (String) payload.get("password");
+            String confirmPassword = (String) payload.get("confirmPassword");
+
+            String result = userService.setPassword(userId, password, confirmPassword);
+            return ResponseEntity.ok(result);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
 }
