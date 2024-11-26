@@ -27,6 +27,9 @@ public class UserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     public String setPassword(Long userId, String password, String confirmPassword) {
         // Check if passwords match
         if (!password.equals(confirmPassword)) {
@@ -141,5 +144,20 @@ public class UserService {
     // Method to get all users
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    // Verify password and generate token
+    public String verifyPassword(String mobileNumber, String password) {
+        List<User> users = userRepository.findByMobileNumber(mobileNumber);
+        if (users.isEmpty()) {
+            throw new RuntimeException("User not found.");
+        }
+
+        User user = users.get(0);
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new RuntimeException("Invalid password.");
+        }
+
+        return jwtUtil.generateToken(user.getId(), user.getRole(), user.getMobileNumber());
     }
 }

@@ -115,4 +115,15 @@ public class UserController {
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }
+
+    @PostMapping("/verify-password")
+    public ResponseEntity<?> verifyPassword(@RequestBody User userRequest) {
+        try {
+            String token = userService.verifyPassword(userRequest.getMobileNumber(), userRequest.getPassword());
+            return ResponseEntity.ok("Bearer " + token);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
+    }
+
 }
