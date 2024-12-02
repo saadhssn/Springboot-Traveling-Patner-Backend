@@ -9,6 +9,12 @@ public class UserDTO {
     @NotBlank(message = "Mobile number is required")
     private String mobileNumber;
 
+    @NotBlank(message = "Password is required")
+    private String password;
+
+    @NotBlank(message = "Confirm password is required")
+    private String confirmPassword;  // New field
+
     private String otp;
 
     private String role;
@@ -58,6 +64,22 @@ public class UserDTO {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 
     public Long getBasicInformationId() {

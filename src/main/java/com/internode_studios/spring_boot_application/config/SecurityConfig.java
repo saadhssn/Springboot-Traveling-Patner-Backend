@@ -36,6 +36,8 @@ public class SecurityConfig {
                         "/api/auth/admin/login",
                         "/api/auth/user/login",
                         "api/auth/user/roleassign",
+                        "api/auth/setpassword",
+                        "/api/auth/verify-password",
                         "/api/auth/verify-otp" // Allow access to this endpoint without token
                 ).permitAll()
                 // Only allow admin access to role endpoints

@@ -14,6 +14,12 @@ public class User {
     @Column(name = "mobile_number")
     private String mobileNumber;
 
+    @Column(name = "password")
+    private String password;
+
+//    @Column(name = "confirm_password")
+//    private String confirmPassword;
+
     private String otp;
 
 //        @ManyToOne
@@ -59,6 +65,22 @@ public class User {
     public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+//    public String getConfirmPassword() {
+//        return confirmPassword;
+//    }
+//
+//    public void setConfirmPassword(String confirmPassword) {
+//        this.confirmPassword = confirmPassword;
+//    }
 
     public String getOtp() {
         return otp;
