@@ -1,6 +1,7 @@
 package com.internode_studios.spring_boot_application.user.controller;
 
 import com.internode_studios.spring_boot_application.Jwt.service.JwtUtil;
+import com.internode_studios.spring_boot_application.user.dto.UserDTO;
 import com.internode_studios.spring_boot_application.user.model.User;
 import com.internode_studios.spring_boot_application.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,4 +127,23 @@ public class UserController {
         }
     }
 
+    @PostMapping("/sales-agent")
+    public ResponseEntity<?> addSalesAgent(@RequestBody UserDTO userDTO) {
+        try {
+            User newAgent = userService.addSalesAgent(userDTO);
+            return ResponseEntity.ok(newAgent);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/sales-agent/{userId}")
+    public ResponseEntity<?> updateSalesAgent(@PathVariable Long userId, @RequestBody UserDTO userDTO) {
+        try {
+            User updatedAgent = userService.updateSalesAgent(userId, userDTO);
+            return ResponseEntity.ok(updatedAgent);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
 }

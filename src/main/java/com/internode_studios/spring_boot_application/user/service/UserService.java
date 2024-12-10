@@ -3,6 +3,7 @@ package com.internode_studios.spring_boot_application.user.service;
 import com.internode_studios.spring_boot_application.Jwt.service.JwtUtil;
 import com.internode_studios.spring_boot_application.role.model.Role;
 import com.internode_studios.spring_boot_application.role.repository.RoleRepository;
+import com.internode_studios.spring_boot_application.user.dto.UserDTO;
 import com.internode_studios.spring_boot_application.user.model.User;
 import com.internode_studios.spring_boot_application.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,5 +160,75 @@ public class UserService {
         }
 
         return jwtUtil.generateToken(user.getId(), user.getRole(), user.getMobileNumber());
+    }
+
+    public User addSalesAgent(UserDTO userDTO) {
+        // Check if the role exists
+        Optional<Role> roleOpt = roleRepository.findByName(userDTO.getRole());
+        if (roleOpt.isEmpty()) {
+            throw new RuntimeException("Role '" + userDTO.getRole() + "' does not exist.");
+        }
+
+        // Validate unique CNIC and email
+        if (userRepository.findByCnicNumber(userDTO.getCnicNumber()).isPresent()) {
+            throw new RuntimeException("CNIC number already exists.");
+        }
+
+        if (userDTO.getEmail() != null && userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already exists.");
+        }
+
+        // Map DTO to User entity
+        User user = new User();
+        user.setMobileNumber(userDTO.getMobileNumber());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword())); // Encrypt password
+        user.setCnicNumber(userDTO.getCnicNumber());
+        user.setEmail(userDTO.getEmail());
+        user.setName(userDTO.getName());
+        user.setGender(userDTO.getGender());
+        user.setRole(userDTO.getRole());
+        user.setStatus(userDTO.getStatus());
+
+        // Save the sales agent
+        return userRepository.save(user);
+    }
+
+    public User updateSalesAgent(Long userId, UserDTO userDTO) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Sales agent with ID " + userId + " not found."));
+
+        // Check if CNIC or email is being updated and validate uniqueness
+        if (userDTO.getCnicNumber() != null && !userDTO.getCnicNumber().equals(existingUser.getCnicNumber())) {
+            if (userRepository.findByCnicNumber(userDTO.getCnicNumber()).isPresent()) {
+                throw new RuntimeException("CNIC number already exists.");
+            }
+            existingUser.setCnicNumber(userDTO.getCnicNumber());
+        }
+
+        if (userDTO.getEmail() != null && !userDTO.getEmail().equals(existingUser.getEmail())) {
+            if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
+                throw new RuntimeException("Email already exists.");
+            }
+            existingUser.setEmail(userDTO.getEmail());
+        }
+
+        // Update other fields if provided
+        if (userDTO.getMobileNumber() != null) {
+            existingUser.setMobileNumber(userDTO.getMobileNumber());
+        }
+        if (userDTO.getPassword() != null) {
+            existingUser.setPassword(passwordEncoder.encode(userDTO.getPassword())); // Encrypt password
+        }
+        if (userDTO.getName() != null) {
+            existingUser.setName(userDTO.getName());
+        }
+        if (userDTO.getGender() != null) {
+            existingUser.setGender(userDTO.getGender());
+        }
+        if (userDTO.getStatus() != null) {
+            existingUser.setStatus(userDTO.getStatus());
+        }
+
+        return userRepository.save(existingUser);
     }
 }

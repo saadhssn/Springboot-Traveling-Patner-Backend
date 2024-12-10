@@ -2,6 +2,7 @@ package com.internode_studios.spring_boot_application.user.model;
 
 import com.internode_studios.spring_boot_application.role.model.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "users")
@@ -28,6 +29,18 @@ public class User {
 
     @Column(name = "role")
     private String role;
+
+    @Column(name = "cnic_number", unique = true)
+    private String cnicNumber;
+
+    @Column(name = "email", unique = true)
+    private String email;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "gender")
+    private String gender;
 
     @Column(name = "basic_information_id")
     private Long basicInformationId;
@@ -137,6 +150,9 @@ public class User {
     public void setStatus(boolean status) {
         this.status = status;
     }
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
 
     public String getRememberToken() {
         return rememberToken;
@@ -152,6 +168,46 @@ public class User {
 
     public void setDeviceToken(String deviceToken) {
         this.deviceToken = deviceToken;
+    }
+
+    public @Pattern(regexp = "\\d{13}", message = "CNIC must be exactly 13 digits") String getCnicNumber() {
+        return cnicNumber;
+    }
+
+    public void setCnicNumber(@Pattern(regexp = "\\d{13}", message = "CNIC must be exactly 13 digits") String cnicNumber) {
+        this.cnicNumber = cnicNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public Boolean getOtpVerified() {
+        return isOtpVerified;
+    }
+
+    public void setOtpVerified(Boolean otpVerified) {
+        isOtpVerified = otpVerified;
     }
 
     public Boolean getIsOtpVerified() {
