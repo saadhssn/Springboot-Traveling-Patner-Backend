@@ -32,17 +32,9 @@ public class BannerService {
     // Update Banner by ID
     public Banner updateBanner(Long id, Banner updatedBanner) {
         return bannerRepository.findById(id).map(detail -> {
-            detail.setBanner(updatedBanner.getBanner());
-            detail.setTitle1(updatedBanner.getTitle1());
-            detail.setDescription1(updatedBanner.getDescription1());
-            detail.setTitle2(updatedBanner.getTitle2());
-            detail.setDescription2(updatedBanner.getDescription2());
-            detail.setTitle3(updatedBanner.getTitle3());
-            detail.setDescription3(updatedBanner.getDescription3());
-            detail.setCoverImage(updatedBanner.getCoverImage());
-            detail.setImage1(updatedBanner.getImage1());
-            detail.setImage2(updatedBanner.getImage2());
-            detail.setImage3(updatedBanner.getImage3());
+            detail.setBannerImage(updatedBanner.getBannerImage());
+            detail.setBannerTitle(updatedBanner.getBannerTitle());
+            detail.setBannerDescription(updatedBanner.getBannerDescription());
             return bannerRepository.save(detail);
         }).orElseThrow(() -> new RuntimeException("Banner not found"));
     }
