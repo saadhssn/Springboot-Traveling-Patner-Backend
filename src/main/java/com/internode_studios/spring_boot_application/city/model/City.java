@@ -13,6 +13,9 @@ public class City {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "state_id", nullable = false)
+    private Long stateId;
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -28,5 +31,13 @@ public class City {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getStateId() {
+        return stateId;
+    }
+
+    public void setStateId(Long stateId) {
+        this.stateId = stateId;
     }
 }
