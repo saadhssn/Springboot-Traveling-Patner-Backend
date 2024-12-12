@@ -27,7 +27,7 @@ public class UserController {
             // Ensure an admin exists
             if (userService.isAdminExists()) {
                 // Check if the Bearer token is present
-                if (token == null || !token.startsWith("Bearer ")) {
+                if (token == null) {
                     return ResponseEntity.status(401).body("Bearer token is required for admin login.");
                 }
 
@@ -77,7 +77,7 @@ public class UserController {
     public ResponseEntity<?> verifyOtp(@RequestBody User userRequest) {
         String token = userService.verifyOtp(userRequest.getMobileNumber(), userRequest.getOtp(), jwtUtil);
         if (token != null) {
-            return ResponseEntity.ok("Bearer " + token);
+            return ResponseEntity.ok(token);
         }
         return ResponseEntity.status(401).body("Invalid OTP.");
     }
@@ -121,7 +121,7 @@ public class UserController {
     public ResponseEntity<?> verifyPassword(@RequestBody User userRequest) {
         try {
             String token = userService.verifyPassword(userRequest.getMobileNumber(), userRequest.getPassword());
-            return ResponseEntity.ok("Bearer " + token);
+            return ResponseEntity.ok(token);
         } catch (RuntimeException e) {
             return ResponseEntity.status(401).body(e.getMessage());
         }

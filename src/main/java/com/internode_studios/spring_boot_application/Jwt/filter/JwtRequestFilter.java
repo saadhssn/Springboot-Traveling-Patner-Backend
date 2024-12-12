@@ -34,7 +34,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String mobileNumber = null;
         String jwt = null;
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+        if (authorizationHeader != null) {
             jwt = authorizationHeader.substring(7);
             mobileNumber = jwtUtil.extractMobileNumber(jwt);
         }
