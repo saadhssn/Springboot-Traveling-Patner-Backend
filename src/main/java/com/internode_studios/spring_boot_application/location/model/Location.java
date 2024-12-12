@@ -11,14 +11,23 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "address", nullable = true)
-    private String address;
+    @Column(name = "name", nullable = true)
+    private String name;
 
-    @Column(name = "area", nullable = true)
-    private String area;
+    @Column(name = "latitude", nullable = true)
+    private String latitude;
 
-    @Column(name = "city", nullable = true)
-    private String city;
+    @Column(name = "longitude", nullable = true)
+    private String longitude;
+
+    @Column(name = "areaId", nullable = true)
+    private Long areaId;
+
+    @Column(name = "cityId", nullable = true)
+    private Long cityId;
+
+    @Column(name = "stateId", nullable = true)
+    private Long stateId;
 
     public Long getId() {
         return id;
@@ -28,27 +37,51 @@ public class Location {
         this.id = id;
     }
 
-    public String getAddress() {
-        return address;
+    public String getName() {
+        return name;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getArea() {
-        return area;
+    public String getLatitude() {
+        return latitude;
     }
 
-    public void setArea(String area) {
-        this.area = area;
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
 
-    public String getCity() {
-        return city;
+    public String getLongitude() {
+        return longitude;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public Long getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(Long areaId) {
+        this.areaId = areaId;
+    }
+
+    public Long getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(Long cityId) {
+        this.cityId = cityId;
+    }
+
+    public Long getStateId() {
+        return stateId;
+    }
+
+    public void setStateId(Long stateId) {
+        this.stateId = stateId;
     }
 }
