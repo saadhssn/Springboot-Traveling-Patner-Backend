@@ -35,7 +35,7 @@ public class UserDTO {
 
     private Long vehicleId;
 
-    private Boolean status;
+    private String status;
 
     private String rememberToken;
 
@@ -156,11 +156,11 @@ public class UserDTO {
         this.vehicleId = vehicleId;
     }
 
-    public Boolean getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
