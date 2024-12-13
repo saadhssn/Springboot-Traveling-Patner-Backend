@@ -51,7 +51,8 @@ public class User {
     @Column(name = "vehicle_id")
     private Long vehicleId;
 
-    private Boolean status;
+    @Column(name = "status", nullable = true)
+    private String status;
 
     @Column(name = "remember_token")
     private String rememberToken;
@@ -143,14 +144,11 @@ public class User {
         this.vehicleId = vehicleId;
     }
 
-    public boolean getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-    public void setStatus(Boolean status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
