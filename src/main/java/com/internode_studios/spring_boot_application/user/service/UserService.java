@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -231,5 +232,37 @@ public class    UserService {
 
         return userRepository.save(existingUser);
     }
+
+    // Soft delete a user
+    public void softDeleteUser(Long userId) {
+        System.out.println("Attempting to soft delete user with ID: " + userId);
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            user.setDeleted(true);
+            user.setDeletedAt(LocalDateTime.now());
+            userRepository.save(user);
+        } else {
+            throw new RuntimeException("User with ID " + userId + " not found.");
+        }
+    }
+
+
+
+    // Hard delete a user
+    public void hardDeleteUser(Long userId) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isPresent()) {
+            userRepository.delete(userOpt.get());
+        } else {
+            throw new RuntimeException("User with ID " + userId + " not found.");
+        }
+    }
+
+    // Example to fetch all non-deleted users
+    public List<User> getAllActiveUsers() {
+        return userRepository.findByDeletedFalse();
+    }
+
 
 }
