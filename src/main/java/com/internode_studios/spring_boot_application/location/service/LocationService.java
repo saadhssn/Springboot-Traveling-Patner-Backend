@@ -1,5 +1,6 @@
 package com.internode_studios.spring_boot_application.location.service;
 
+import com.internode_studios.spring_boot_application.area.repository.AreaRepository;
 import com.internode_studios.spring_boot_application.city.repository.CityRepository;
 import com.internode_studios.spring_boot_application.location.model.Location;
 import com.internode_studios.spring_boot_application.location.repository.LocationRepository;
@@ -20,6 +21,9 @@ public class LocationService {
     private CityRepository cityRepository;
 
     @Autowired
+    private AreaRepository areaRepository;
+
+    @Autowired
     private StateRepository stateRepository;
 
     // Create a new Location
@@ -31,12 +35,12 @@ public class LocationService {
         }
 
         // Check if the cityId exists in the City table
-        if (!stateRepository.existsById(location.getCityId())) {
+        if (!cityRepository.existsById(location.getCityId())) {
             throw new IllegalArgumentException("City with ID " + location.getCityId() + " does not exist.");
         }
 
         // Check if the areaId exists in the Area table
-        if (!stateRepository.existsById(location.getAreaId())) {
+        if (!areaRepository.existsById(location.getAreaId())) {
             throw new IllegalArgumentException("Area with ID " + location.getAreaId() + " does not exist.");
         }
         return locationRepository.save(location);
@@ -64,12 +68,12 @@ public class LocationService {
         }
 
         // Check if the cityId exists in the City table
-        if (!stateRepository.existsById(location.getCityId())) {
+        if (!cityRepository.existsById(location.getCityId())) {
             throw new IllegalArgumentException("City with ID " + location.getCityId() + " does not exist.");
         }
 
         // Check if the areaId exists in the Area table
-        if (!stateRepository.existsById(location.getAreaId())) {
+        if (!areaRepository.existsById(location.getAreaId())) {
             throw new IllegalArgumentException("Area with ID " + location.getAreaId() + " does not exist.");
         }
 
