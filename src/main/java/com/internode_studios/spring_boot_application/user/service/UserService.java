@@ -212,7 +212,7 @@ public class    UserService {
             existingUser.setEmail(userDTO.getEmail());
         }
 
-        // Update other fields if provided
+        // Update fields only if they are not null
         if (userDTO.getMobileNumber() != null) {
             existingUser.setMobileNumber(userDTO.getMobileNumber());
         }
@@ -231,4 +231,5 @@ public class    UserService {
 
         return userRepository.save(existingUser);
     }
+
 }

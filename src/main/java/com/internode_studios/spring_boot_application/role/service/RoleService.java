@@ -43,13 +43,23 @@ public class RoleService {
         Optional<Role> role = roleRepository.findById(id);
         if (role.isPresent()) {
             Role existingRole = role.get();
-            // Convert updated name and slug to lowercase
-            existingRole.setName(roleDetails.getName().toLowerCase());
-            existingRole.setSlug(roleDetails.getSlug().toLowerCase());
+
+            // Update fields only if they are non-null
+            if (roleDetails.getName() != null) {
+                existingRole.setName(roleDetails.getName().toLowerCase());
+            }
+            if (roleDetails.getSlug() != null) {
+                existingRole.setSlug(roleDetails.getSlug().toLowerCase());
+            }
+
+            // Save the updated role
             return roleRepository.save(existingRole);
         }
-        return null;
+
+        // Handle case where the role is not found
+        throw new RuntimeException("Role not found with ID: " + id);
     }
+
 
     // Delete Role
     public void deleteRole(Long id) {

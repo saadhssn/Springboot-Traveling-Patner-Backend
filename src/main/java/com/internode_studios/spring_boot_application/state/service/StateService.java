@@ -33,11 +33,16 @@ public class StateService {
 
     // Update State by ID
     public State updateState(Long id, State updatedState) {
-        return stateRepository.findById(id).map(detail -> {
-            detail.setName(updatedState.getName());
-            return stateRepository.save(detail);
-        }).orElseThrow(() -> new RuntimeException("State not found"));
+        return stateRepository.findById(id).map(existingState -> {
+            // Update fields only if they are non-null
+            if (updatedState.getName() != null) {
+                existingState.setName(updatedState.getName());
+            }
+            // Save the updated state
+            return stateRepository.save(existingState);
+        }).orElseThrow(() -> new RuntimeException("State not found with ID: " + id));
     }
+
 
     // Delete State by ID
     public void deleteState(Long id) {

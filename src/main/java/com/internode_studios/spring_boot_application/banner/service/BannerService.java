@@ -31,13 +31,21 @@ public class BannerService {
 
     // Update Banner by ID
     public Banner updateBanner(Long id, Banner updatedBanner) {
-        return bannerRepository.findById(id).map(detail -> {
-            detail.setBannerImage(updatedBanner.getBannerImage());
-            detail.setBannerTitle(updatedBanner.getBannerTitle());
-            detail.setBannerDescription(updatedBanner.getBannerDescription());
-            return bannerRepository.save(detail);
+        return bannerRepository.findById(id).map(existingBanner -> {
+            // Update only the non-null fields
+            if (updatedBanner.getBannerImage() != null) {
+                existingBanner.setBannerImage(updatedBanner.getBannerImage());
+            }
+            if (updatedBanner.getBannerTitle() != null) {
+                existingBanner.setBannerTitle(updatedBanner.getBannerTitle());
+            }
+            if (updatedBanner.getBannerDescription() != null) {
+                existingBanner.setBannerDescription(updatedBanner.getBannerDescription());
+            }
+            return bannerRepository.save(existingBanner);
         }).orElseThrow(() -> new RuntimeException("Banner not found"));
     }
+
 
     // Delete Banner by ID
     public void deleteBanner(Long id) {

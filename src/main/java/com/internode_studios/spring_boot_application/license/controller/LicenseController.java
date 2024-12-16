@@ -45,7 +45,7 @@ public class LicenseController {
     }
 
     // Update a License by ID
-    @PutMapping("/update/{id}")
+    @PatchMapping("/update/{id}")
     public ResponseEntity<?> updateLicense(@PathVariable Long id, @RequestBody License updatedLicense) {
         Optional<License> existingLicense = Optional.ofNullable(licenseService.getLicenseById(id)); // Assuming you have a method to fetch by ID
         if (existingLicense.isPresent()) {

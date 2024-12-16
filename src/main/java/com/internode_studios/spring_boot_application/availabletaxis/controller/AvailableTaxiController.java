@@ -48,7 +48,7 @@ public class AvailableTaxiController {
     }
 
     // Update RideStatus AvailableTaxi
-    @PutMapping("/update/rideStatus/{id}")
+    @PatchMapping("/update/rideStatus/{id}")
     public ResponseEntity<?> updateRideStatusAvailableTaxi(@PathVariable Long id, @RequestBody AvailableTaxi availableTaxiDetails) {
         try {
             AvailableTaxi updatedAvailableTaxi = availableTaxiService.updateRideStatusAvailableTaxi(id, availableTaxiDetails);
