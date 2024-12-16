@@ -51,19 +51,40 @@ public class BasicInformationService {
     public BasicInformation updateBasicInformation(Long id, BasicInformation updatedInfo) {
         BasicInformation existingInfo = getBasicInformationById(id);
         if (existingInfo != null) {
-            existingInfo.setFirstName(updatedInfo.getFirstName());
-            existingInfo.setLastName(updatedInfo.getLastName());
-            existingInfo.setGender(updatedInfo.getGender());
-            existingInfo.setWhatsApp(updatedInfo.getWhatsApp());
-            existingInfo.setEmail(updatedInfo.getEmail());
-            existingInfo.setCnicNumber(updatedInfo.getCnicNumber());
-            existingInfo.setCnicFront(updatedInfo.getCnicFront());
-            existingInfo.setCnicBack(updatedInfo.getCnicBack());
-            existingInfo.setProfilePicture(updatedInfo.getProfilePicture());
-            existingInfo.setReferralCode(updatedInfo.getReferralCode());
+            // Update only the non-null fields
+            if (updatedInfo.getFirstName() != null) {
+                existingInfo.setFirstName(updatedInfo.getFirstName());
+            }
+            if (updatedInfo.getLastName() != null) {
+                existingInfo.setLastName(updatedInfo.getLastName());
+            }
+            if (updatedInfo.getGender() != null) {
+                existingInfo.setGender(updatedInfo.getGender());
+            }
+            if (updatedInfo.getWhatsApp() != null) {
+                existingInfo.setWhatsApp(updatedInfo.getWhatsApp());
+            }
+            if (updatedInfo.getEmail() != null) {
+                existingInfo.setEmail(updatedInfo.getEmail());
+            }
+            if (updatedInfo.getCnicNumber() != null) {
+                existingInfo.setCnicNumber(updatedInfo.getCnicNumber());
+            }
+            if (updatedInfo.getCnicFront() != null) {
+                existingInfo.setCnicFront(updatedInfo.getCnicFront());
+            }
+            if (updatedInfo.getCnicBack() != null) {
+                existingInfo.setCnicBack(updatedInfo.getCnicBack());
+            }
+            if (updatedInfo.getProfilePicture() != null) {
+                existingInfo.setProfilePicture(updatedInfo.getProfilePicture());
+            }
+            if (updatedInfo.getReferralCode() != null) {
+                existingInfo.setReferralCode(updatedInfo.getReferralCode());
+            }
             return basicInformationRepository.save(existingInfo);
         }
-        return null;
+        throw new IllegalArgumentException("Basic Information with ID " + id + " does not exist.");
     }
 
     public void deleteBasicInformation(Long id) {

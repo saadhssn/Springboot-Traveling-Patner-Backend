@@ -53,20 +53,26 @@ public class AreaService {
         Area area = areaRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("Area with ID " + id + " does not exist."));
 
-        // Check if the stateId exists in the State table
-        if (!stateRepository.existsById(area.getStateId())) {
-            throw new IllegalArgumentException("State with ID " + area.getStateId() + " does not exist.");
+        // Validate stateId if it's provided in the payload
+        if (areaDetails.getStateId() != null && !stateRepository.existsById(areaDetails.getStateId())) {
+            throw new IllegalArgumentException("State with ID " + areaDetails.getStateId() + " does not exist.");
         }
 
-        // Check if the cityId exists in the City table
-        if (!cityRepository.existsById(area.getCityId())) {
-            throw new IllegalArgumentException("City with ID " + area.getCityId() + " does not exist.");
+        // Validate cityId if it's provided in the payload
+        if (areaDetails.getCityId() != null && !cityRepository.existsById(areaDetails.getCityId())) {
+            throw new IllegalArgumentException("City with ID " + areaDetails.getCityId() + " does not exist.");
         }
 
-        // Update fields
-        area.setName(areaDetails.getName());
-        area.setCityId(areaDetails.getCityId());
-        area.setStateId(areaDetails.getStateId());
+        // Update only the non-null fields
+        if (areaDetails.getName() != null) {
+            area.setName(areaDetails.getName());
+        }
+        if (areaDetails.getCityId() != null) {
+            area.setCityId(areaDetails.getCityId());
+        }
+        if (areaDetails.getStateId() != null) {
+            area.setStateId(areaDetails.getStateId());
+        }
 
         return areaRepository.save(area);
     }

@@ -31,19 +31,42 @@ public class BlogService {
 
     // Update Blog by ID
     public Blog updateBlog(Long id, Blog updatedBlog) {
-        return blogRepository.findById(id).map(detail -> {
-            detail.setMainTitle(updatedBlog.getMainTitle());
-            detail.setTitle1(updatedBlog.getTitle1());
-            detail.setDescription1(updatedBlog.getDescription1());
-            detail.setTitle2(updatedBlog.getTitle2());
-            detail.setDescription2(updatedBlog.getDescription2());
-            detail.setTitle3(updatedBlog.getTitle3());
-            detail.setDescription3(updatedBlog.getDescription3());
-            detail.setCoverImage(updatedBlog.getCoverImage());
-            detail.setImage1(updatedBlog.getImage1());
-            detail.setImage2(updatedBlog.getImage2());
-            detail.setImage3(updatedBlog.getImage3());
-            return blogRepository.save(detail);
+        return blogRepository.findById(id).map(existingBlog -> {
+            // Update only non-null fields
+            if (updatedBlog.getMainTitle() != null) {
+                existingBlog.setMainTitle(updatedBlog.getMainTitle());
+            }
+            if (updatedBlog.getTitle1() != null) {
+                existingBlog.setTitle1(updatedBlog.getTitle1());
+            }
+            if (updatedBlog.getDescription1() != null) {
+                existingBlog.setDescription1(updatedBlog.getDescription1());
+            }
+            if (updatedBlog.getTitle2() != null) {
+                existingBlog.setTitle2(updatedBlog.getTitle2());
+            }
+            if (updatedBlog.getDescription2() != null) {
+                existingBlog.setDescription2(updatedBlog.getDescription2());
+            }
+            if (updatedBlog.getTitle3() != null) {
+                existingBlog.setTitle3(updatedBlog.getTitle3());
+            }
+            if (updatedBlog.getDescription3() != null) {
+                existingBlog.setDescription3(updatedBlog.getDescription3());
+            }
+            if (updatedBlog.getCoverImage() != null) {
+                existingBlog.setCoverImage(updatedBlog.getCoverImage());
+            }
+            if (updatedBlog.getImage1() != null) {
+                existingBlog.setImage1(updatedBlog.getImage1());
+            }
+            if (updatedBlog.getImage2() != null) {
+                existingBlog.setImage2(updatedBlog.getImage2());
+            }
+            if (updatedBlog.getImage3() != null) {
+                existingBlog.setImage3(updatedBlog.getImage3());
+            }
+            return blogRepository.save(existingBlog);
         }).orElseThrow(() -> new RuntimeException("Blog not found"));
     }
 

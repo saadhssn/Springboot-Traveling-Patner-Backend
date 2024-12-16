@@ -57,17 +57,28 @@ public class LicenseService {
     // Update License
     @Transactional
     public License updateLicense(Long id, License updatedLicense) {
+        // Find the existing license
         License existingLicense = licenseRepository.findById(id).orElse(null);
         if (existingLicense != null) {
-            existingLicense.setLicenseNo(updatedLicense.getLicenseNo());
-            existingLicense.setLicenseFront(updatedLicense.getLicenseFront());
-            existingLicense.setLicenseBack(updatedLicense.getLicenseBack());
-            // Update other fields as needed
+            // Update fields only if they are non-null
+            if (updatedLicense.getLicenseNo() != null) {
+                existingLicense.setLicenseNo(updatedLicense.getLicenseNo());
+            }
+            if (updatedLicense.getLicenseFront() != null) {
+                existingLicense.setLicenseFront(updatedLicense.getLicenseFront());
+            }
+            if (updatedLicense.getLicenseBack() != null) {
+                existingLicense.setLicenseBack(updatedLicense.getLicenseBack());
+            }
+            // Add checks for other fields as needed...
 
+            // Save the updated license
             License savedLicense = licenseRepository.save(existingLicense);
             System.out.println("License updated with ID: " + savedLicense.getId());
             return savedLicense;
         }
+
+        // Handle case where the license is not found
         System.out.println("License not found with ID: " + id);
         return null;
     }

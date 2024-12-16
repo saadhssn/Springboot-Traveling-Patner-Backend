@@ -41,19 +41,24 @@ public class CityService {
     // Update City by ID
     public City updateCity(Long id, City cityDetails) {
         // Check if the City exists
-        City city = cityRepository.findById(id).orElseThrow(() ->
+        City existingCity = cityRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("City with ID " + id + " does not exist."));
 
-        // Check if the stateId exists in the State table
-        if (!stateRepository.existsById(cityDetails.getStateId())) {
-            throw new IllegalArgumentException("State with ID " + cityDetails.getStateId() + " does not exist.");
+        // Update the name if provided
+        if (cityDetails.getName() != null) {
+            existingCity.setName(cityDetails.getName());
         }
 
-        // Update fields
-        city.setName(cityDetails.getName());
-        city.setStateId(cityDetails.getStateId());
+        // Update the stateId if provided and ensure it exists in the State table
+        if (cityDetails.getStateId() != null) {
+            if (!stateRepository.existsById(cityDetails.getStateId())) {
+                throw new IllegalArgumentException("State with ID " + cityDetails.getStateId() + " does not exist.");
+            }
+            existingCity.setStateId(cityDetails.getStateId());
+        }
 
-        return cityRepository.save(city);
+        // Save the updated City
+        return cityRepository.save(existingCity);
     }
 
     // Delete City by ID
