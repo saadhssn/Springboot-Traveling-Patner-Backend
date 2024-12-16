@@ -4,6 +4,8 @@ import com.internode_studios.spring_boot_application.role.model.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -62,6 +64,12 @@ public class User {
 
     @Column(name = "is_otp_verified")
     private Boolean isOtpVerified = false;
+
+    @Column(name = "deleted") // This will indicate if the user is soft deleted
+    private Boolean deleted = false;
+
+    @Column(name = "deleted_at") // Timestamp for soft deletion
+    private LocalDateTime deletedAt;
 
     // Getters and Setters
     public Long getId() {
@@ -214,5 +222,21 @@ public class User {
 
     public void setIsOtpVerified(Boolean isOtpVerified) {
         this.isOtpVerified = isOtpVerified;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
     }
 }

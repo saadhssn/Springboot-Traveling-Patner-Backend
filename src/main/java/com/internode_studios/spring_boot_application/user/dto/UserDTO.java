@@ -1,7 +1,10 @@
 package com.internode_studios.spring_boot_application.user.dto;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+
+import java.time.LocalDateTime;
 
 public class UserDTO {
 
@@ -42,6 +45,12 @@ public class UserDTO {
     private String deviceToken;
 
     private Boolean isOtpVerified;
+
+    @Column(name = "deleted") // This will indicate if the user is soft deleted
+    private Boolean deleted = false;
+
+    @Column(name = "deleted_at") // Timestamp for soft deletion
+    private LocalDateTime deletedAt;
 
     // Getters and Setters
     public Long getId() {
@@ -186,5 +195,21 @@ public class UserDTO {
 
     public void setIsOtpVerified(Boolean isOtpVerified) {
         this.isOtpVerified = isOtpVerified;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
     }
 }

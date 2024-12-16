@@ -18,4 +18,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByCnicNumber(String cnicNumber);
     Optional<User> findByEmail(String email);
+    List<User> findByDeletedFalse();
 }
