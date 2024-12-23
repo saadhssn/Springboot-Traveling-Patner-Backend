@@ -1,6 +1,7 @@
 package com.internode_studios.spring_boot_application.user.service;
 
 import com.internode_studios.spring_boot_application.Jwt.service.JwtUtil;
+import com.internode_studios.spring_boot_application.location.model.Location;
 import com.internode_studios.spring_boot_application.role.model.Role;
 import com.internode_studios.spring_boot_application.role.repository.RoleRepository;
 import com.internode_studios.spring_boot_application.user.dto.UserDTO;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class    UserService {
+public class UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -148,6 +149,11 @@ public class    UserService {
         return userRepository.findAll();
     }
 
+    // Get User by ID
+    public Optional<User> getUserById(Long id) {
+        return userRepository.findById(id);
+    }
+
     // Verify password and generate token
     public String verifyPassword(String mobileNumber, String password) {
         List<User> users = userRepository.findByMobileNumber(mobileNumber);
@@ -247,8 +253,6 @@ public class    UserService {
         }
     }
 
-
-
     // Hard delete a user
     public void hardDeleteUser(Long userId) {
         Optional<User> userOpt = userRepository.findById(userId);
@@ -263,6 +267,5 @@ public class    UserService {
     public List<User> getAllActiveUsers() {
         return userRepository.findByDeletedFalse();
     }
-
 
 }

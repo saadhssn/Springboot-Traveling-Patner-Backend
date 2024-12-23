@@ -1,6 +1,7 @@
 package com.internode_studios.spring_boot_application.user.controller;
 
 import com.internode_studios.spring_boot_application.Jwt.service.JwtUtil;
+import com.internode_studios.spring_boot_application.location.model.Location;
 import com.internode_studios.spring_boot_application.user.dto.UserDTO;
 import com.internode_studios.spring_boot_application.user.model.User;
 import com.internode_studios.spring_boot_application.user.service.UserService;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -99,6 +101,13 @@ public class UserController {
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        Optional<User> user = userService.getUserById(id);
+        return user.map(c -> ResponseEntity.ok((Object) c)) // Cast user object to Object
+                .orElseGet(() -> ResponseEntity.status(404).body("User not found"));
     }
 
     @PostMapping("/setpassword")
