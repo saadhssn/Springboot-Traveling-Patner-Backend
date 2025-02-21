@@ -34,12 +34,13 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000", "http://192.168.18.46:8080")
+                        .allowedOriginPatterns("*") // Allow all origins dynamically
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
             }
         };
+
     }
 
     // Security Filter Chain Bean
