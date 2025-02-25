@@ -11,8 +11,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -27,52 +30,44 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-    // CORS Configuration Bean
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOriginPatterns("*") // Allow all origins dynamically
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*")
-                        .allowCredentials(true);
-            }
-        };
-
-    }
-
     // Security Filter Chain Bean
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors() // Enable CORS
-                .and()
-                .csrf().disable() // Disable CSRF for APIs
-                .authorizeHttpRequests()
-                .requestMatchers(
-                        "/swagger-ui/**",
-                        "/swagger-resources/**",
-                        "/v3/api-docs/**",
-                        "/webjars/**",
-                        "/api/auth/admin/login",
-                        "/api/auth/user/login",
-                        "/api/auth/user/roleassign",
-                        "/api/auth/setpassword",
-                        "/api/auth/verify-password",
-                        "/api/auth/verify-otp",
-                        "http://localhost:3000",
-                        "http://192.168.18.19:8080"
-                ).permitAll() // Permit specified endpoints
-                .requestMatchers("/api/roles/**").hasAuthority("admin") // Admin role for roles API
-                .requestMatchers("/api/cities/**").hasAuthority("admin")
-                .requestMatchers("/api/rideTypes/**").hasAuthority("admin")
-                .anyRequest().authenticated() // All other requests require authentication
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Stateless session
-
-        // Add JWT Filter
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        http
+                .cors(cors -> cors.configurationSource(request -> {
+                    CorsConfiguration corsConfig = new CorsConfiguration();
+                    corsConfig.setAllowedOrigins(List.of(
+                            "http://localhost:3000",  // ✅ Web Frontend
+                            "http://localhost:8081",  // ✅ Metro Bundler (React Native)
+                            "http://10.0.2.2:8081",   // ✅ Android Emulator (React Native Metro Bundler)
+                            "http://192.168.1.100:8081" // ✅ Physical Device (Replace with your IP)
+                    ));
+                    corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    corsConfig.setAllowedHeaders(List.of("*"));
+                    corsConfig.setAllowCredentials(true);
+                    return corsConfig;
+                }))
+                .csrf(csrf -> csrf.disable()) // ✅ Disable CSRF for APIs
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // ✅ Stateless sessions
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-resources/**",
+                                "/v3/api-docs/**",
+                                "/webjars/**",
+                                "/api/auth/admin/login",
+                                "/api/auth/user/login",
+                                "/api/auth/user/roleassign",
+                                "/api/auth/setpassword",
+                                "/api/auth/verify-password",
+                                "/api/auth/verify-otp"
+                        ).permitAll() // ✅ Open public APIs
+                        .requestMatchers("/api/roles/**").hasAuthority("admin")
+                        .requestMatchers("/api/cities/**").hasAuthority("admin")
+                        .requestMatchers("/api/rideTypes/**").hasAuthority("admin")
+                        .anyRequest().authenticated() // ✅ Protect other APIs
+                )
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // ✅ Adding JWT filter correctly
 
         return http.build();
     }
