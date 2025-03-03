@@ -47,3 +47,9 @@ springdoc:
 socketio:
   hostname: localhost
   port: 9092
+
+cloudinary:
+  cloud_name: dyzjajwll
+  api_key: 212643979364192
+  api_secret: aRU6mswzgfZYyWKmeHazw8xW6wQ
+
