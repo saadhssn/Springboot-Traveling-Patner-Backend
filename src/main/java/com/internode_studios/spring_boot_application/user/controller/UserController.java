@@ -3,11 +3,15 @@ package com.internode_studios.spring_boot_application.user.controller;
 import com.internode_studios.spring_boot_application.Jwt.service.JwtUtil;
 import com.internode_studios.spring_boot_application.user.dto.UserDTO;
 import com.internode_studios.spring_boot_application.user.model.User;
+import com.internode_studios.spring_boot_application.user.repository.UserRepository;
+import com.internode_studios.spring_boot_application.user.service.OtpService;
 import com.internode_studios.spring_boot_application.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,6 +19,15 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/auth")
 public class UserController {
+
+    @Autowired
+    private OtpService otpService;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private UserService userService;
@@ -57,22 +70,41 @@ public class UserController {
         }
     }
 
+//    @PostMapping("/user/login")
+//    public ResponseEntity<?> userLogin(@RequestBody User user) {
+//        try {
+//            // Restrict admins from using the user login endpoint
+//            if (userService.isAdminRole(user)) {
+//                return ResponseEntity.status(403).body("Admin login is restricted to /admin/login endpoint.");
+//            }
+//
+//            // Proceed with user registration or login
+//            User nonAdminUser = userService.registerOrLoginNonAdmin(user);
+//            return ResponseEntity.ok(nonAdminUser);
+//
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.status(400).body(e.getMessage());
+//        }
+//    }
+
     @PostMapping("/user/login")
-    public ResponseEntity<?> userLogin(@RequestBody User user) {
+    public ResponseEntity<?> userLogin(@RequestBody User userRequest) {
         try {
-            // Restrict admins from using the user login endpoint
-            if (userService.isAdminRole(user)) {
+            // Restrict admin login on this endpoint
+            if (userService.isAdminRole(userRequest)) {
                 return ResponseEntity.status(403).body("Admin login is restricted to /admin/login endpoint.");
             }
 
-            // Proceed with user registration or login
-            User nonAdminUser = userService.registerOrLoginNonAdmin(user);
-            return ResponseEntity.ok(nonAdminUser);
+            // Register or fetch existing user
+            Map<String, Object> response = userService.registerOrLoginNonAdmin(userRequest);
+
+            return ResponseEntity.ok(response);
 
         } catch (RuntimeException e) {
             return ResponseEntity.status(400).body(e.getMessage());
         }
     }
+
 
     @PostMapping("/verify-otp")
     public ResponseEntity<?> verifyOtp(@RequestBody User userRequest) {

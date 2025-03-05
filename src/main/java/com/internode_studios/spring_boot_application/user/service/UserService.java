@@ -101,25 +101,25 @@ public class UserService {
     }
 
     // Register or login non-admin user (only updates OTP if user already exists)
-    public User registerOrLoginNonAdmin(User user) {
-        // Initially set role to null for non-admin users
-        user.setRole(null);
-
-        // Find existing users by mobile number
-        List<User> existingUsers = userRepository.findByMobileNumber(user.getMobileNumber());
-        if (existingUsers.isEmpty()) {
-            // New user registration
-            user.setIsOtpVerified(false);
-            userRepository.save(user);
-            otpService.generateOtp(user.getMobileNumber());
-            return user;
-        } else {
-            // If user exists, only update the OTP and save
-            User existingUser = existingUsers.get(0);
-            otpService.updateOtp(existingUser);  // Update OTP only
-            return existingUser;
-        }
-    }
+//    public User registerOrLoginNonAdmin(User user) {
+//        // Initially set role to null for non-admin users
+//        user.setRole(null);
+//
+//        // Find existing users by mobile number
+//        List<User> existingUsers = userRepository.findByMobileNumber(user.getMobileNumber());
+//        if (existingUsers.isEmpty()) {
+//            // New user registration
+//            user.setIsOtpVerified(false);
+//            userRepository.save(user);
+//            otpService.generateOtp(user.getMobileNumber());
+//            return user;
+//        } else {
+//            // If user exists, only update the OTP and save
+//            User existingUser = existingUsers.get(0);
+//            otpService.updateOtp(existingUser);  // Update OTP only
+//            return existingUser;
+//        }
+//    }
 
     // Check if the user has an admin role
     public boolean isAdminRole(User user) {
@@ -331,5 +331,38 @@ public class UserService {
 
         return response;
     }
+
+    // Find users by mobile number
+    public List<User> findByMobileNumber(String mobileNumber) {
+        return userRepository.findByMobileNumber(mobileNumber);
+    }
+
+    // Generate token
+    public String generateJwtToken(User user) {
+        return jwtUtil.generateToken(user.getId(), user.getRole(), user.getMobileNumber());
+    }
+
+    public Map<String, Object> registerOrLoginNonAdmin(User userRequest) {
+        List<User> existingUsers = userRepository.findByMobileNumber(userRequest.getMobileNumber());
+        User user;
+
+        if (existingUsers.isEmpty()) {
+            // New user registration
+            user = new User();
+            user.setMobileNumber(userRequest.getMobileNumber());
+            user.setIsOtpVerified(false);
+            userRepository.save(user);
+        } else {
+            // Existing user
+            user = existingUsers.get(0);
+        }
+
+        // Generate JWT token
+        String token = jwtUtil.generateToken(user.getId(), user.getRole(), user.getMobileNumber());
+
+        // Build response with user data and token
+        return buildResponse(user, token);
+    }
+
 
 }
