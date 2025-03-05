@@ -1,7 +1,6 @@
 package com.internode_studios.spring_boot_application.user.controller;
 
 import com.internode_studios.spring_boot_application.Jwt.service.JwtUtil;
-import com.internode_studios.spring_boot_application.location.model.Location;
 import com.internode_studios.spring_boot_application.user.dto.UserDTO;
 import com.internode_studios.spring_boot_application.user.model.User;
 import com.internode_studios.spring_boot_application.user.service.UserService;
@@ -77,9 +76,9 @@ public class UserController {
 
     @PostMapping("/verify-otp")
     public ResponseEntity<?> verifyOtp(@RequestBody User userRequest) {
-        String token = userService.verifyOtp(userRequest.getMobileNumber(), userRequest.getOtp(), jwtUtil);
-        if (token != null) {
-            return ResponseEntity.ok(token);
+        Map<String, Object> response = userService.verifyOtp(userRequest.getMobileNumber(), userRequest.getOtp());
+        if (response != null) {
+            return ResponseEntity.ok(response);
         }
         return ResponseEntity.status(401).body("Invalid OTP.");
     }
@@ -129,8 +128,8 @@ public class UserController {
     @PostMapping("/verify-password")
     public ResponseEntity<?> verifyPassword(@RequestBody User userRequest) {
         try {
-            String token = userService.verifyPassword(userRequest.getMobileNumber(), userRequest.getPassword());
-            return ResponseEntity.ok(token);
+            Map<String, Object> response = userService.verifyPassword(userRequest.getMobileNumber(), userRequest.getPassword());
+            return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.status(401).body(e.getMessage());
         }
