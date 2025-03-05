@@ -176,5 +176,14 @@ public class UserController {
         }
     }
 
+    @GetMapping("/getDetails/{userId}")
+    public ResponseEntity<?> getUserDetails(@PathVariable Long userId) {
+        try {
+            Map<String, Object> userDetails = userService.getUserDetails(userId);
+            return ResponseEntity.ok(userDetails);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
 
 }

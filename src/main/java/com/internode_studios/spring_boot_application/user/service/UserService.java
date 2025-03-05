@@ -307,4 +307,29 @@ public class UserService {
         return userRepository.findByDeletedFalse();
     }
 
+    public Map<String, Object> getUserDetails(Long userId) {
+        // Find the user
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Create response map
+        Map<String, Object> response = new HashMap<>();
+        response.put("user", user);
+
+        // Fetch BasicInformation
+        Optional<BasicInformation> basicInfo = basicInformationRepository.findByUserId(userId);
+        response.put("basicInformation", basicInfo.orElse(null));
+
+        // Fetch additional details based on role
+        if ("driver".equalsIgnoreCase(user.getRole())) {
+            Optional<License> license = licenseRepository.findById(user.getLicenseId());
+            Optional<Vehicle> vehicle = vehicleRepository.findById(user.getVehicleId());
+
+            response.put("license", license.orElse(null));
+            response.put("vehicle", vehicle.orElse(null));
+        }
+
+        return response;
+    }
+
 }
