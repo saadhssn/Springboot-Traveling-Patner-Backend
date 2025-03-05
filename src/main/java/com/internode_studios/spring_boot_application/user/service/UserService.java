@@ -1,18 +1,27 @@
 package com.internode_studios.spring_boot_application.user.service;
 
 import com.internode_studios.spring_boot_application.Jwt.service.JwtUtil;
+import com.internode_studios.spring_boot_application.basicinformation.model.BasicInformation;
+import com.internode_studios.spring_boot_application.basicinformation.repository.BasicInformationRepository;
+import com.internode_studios.spring_boot_application.license.model.License;
+import com.internode_studios.spring_boot_application.license.repository.LicenseRepository;
 import com.internode_studios.spring_boot_application.location.model.Location;
 import com.internode_studios.spring_boot_application.role.model.Role;
 import com.internode_studios.spring_boot_application.role.repository.RoleRepository;
 import com.internode_studios.spring_boot_application.user.dto.UserDTO;
 import com.internode_studios.spring_boot_application.user.model.User;
 import com.internode_studios.spring_boot_application.user.repository.UserRepository;
+import com.internode_studios.spring_boot_application.vehicle.model.Vehicle;
+import com.internode_studios.spring_boot_application.vehicle.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -29,6 +38,15 @@ public class UserService {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private BasicInformationRepository basicInformationRepository;
+
+    @Autowired
+    private LicenseRepository licenseRepository;
+
+    @Autowired
+    private VehicleRepository vehicleRepository;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -129,7 +147,7 @@ public class UserService {
     }
 
     // Verify OTP and generate token with id, role, and mobileNumber
-    public String verifyOtp(String mobileNumber, String otp, JwtUtil jwtUtil) {
+    public Map<String, Object> verifyOtp(String mobileNumber, String otp) {
         if (otpService.validateOtp(mobileNumber, otp)) {
             List<User> users = userRepository.findByMobileNumber(mobileNumber);
 
@@ -138,7 +156,8 @@ public class UserService {
                 user.setIsOtpVerified(true);
                 userRepository.save(user);
 
-                return jwtUtil.generateToken(user.getId(), user.getRole(), user.getMobileNumber());
+                String token = jwtUtil.generateToken(user.getId(), user.getRole(), user.getMobileNumber());
+                return buildResponse(user, token);
             }
         }
         return null;
@@ -155,7 +174,7 @@ public class UserService {
     }
 
     // Verify password and generate token
-    public String verifyPassword(String mobileNumber, String password) {
+    public Map<String, Object> verifyPassword(String mobileNumber, String password) {
         List<User> users = userRepository.findByMobileNumber(mobileNumber);
         if (users.isEmpty()) {
             throw new RuntimeException("User not found.");
@@ -166,7 +185,27 @@ public class UserService {
             throw new RuntimeException("Invalid password.");
         }
 
-        return jwtUtil.generateToken(user.getId(), user.getRole(), user.getMobileNumber());
+        String token = jwtUtil.generateToken(user.getId(), user.getRole(), user.getMobileNumber());
+        return buildResponse(user, token);
+    }
+
+    private Map<String, Object> buildResponse(User user, String token) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("user", user);
+
+        Optional<BasicInformation> basicInfo = basicInformationRepository.findByUserId(user.getId());
+        basicInfo.ifPresent(info -> response.put("basicInformation", info));
+
+        if ("driver".equalsIgnoreCase(user.getRole())) {
+            Optional<License> license = licenseRepository.findById(user.getLicenseId());
+            Optional<Vehicle> vehicle = vehicleRepository.findById(user.getVehicleId());
+
+            license.ifPresent(l -> response.put("license", l));
+            vehicle.ifPresent(v -> response.put("vehicle", v));
+        }
+
+        return response;
     }
 
     public User addSalesAgent(UserDTO userDTO) {
