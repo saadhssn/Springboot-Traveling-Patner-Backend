@@ -2,6 +2,8 @@ package com.internode_studios.spring_boot_application.license.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "licenses")
 public class License {
@@ -14,6 +16,8 @@ public class License {
     private Long userId;
     private String licenseFront;
     private String licenseBack;
+    private LocalDateTime licenseVerified;
+
 
     // Getters and Setters
     public Long getId() {
@@ -54,5 +58,13 @@ public class License {
 
     public void setLicenseBack(String licenseBack) {
         this.licenseBack = licenseBack;
+    }
+
+    public LocalDateTime getLicenseVerified() {
+        return licenseVerified;
+    }
+
+    public void setLicenseVerified(LocalDateTime licenseVerified) {
+        this.licenseVerified = licenseVerified;
     }
 }

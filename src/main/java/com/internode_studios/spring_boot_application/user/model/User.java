@@ -71,6 +71,9 @@ public class User {
     @Column(name = "deleted_at") // Timestamp for soft deletion
     private LocalDateTime deletedAt;
 
+    @Column(name = "license_verified") // Timestamp for soft deletion
+    private LocalDateTime licenseVerified;
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -238,5 +241,13 @@ public class User {
 
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    public LocalDateTime getLicenseVerified() {
+        return licenseVerified;
+    }
+
+    public void setLicenseVerified(LocalDateTime licenseVerified) {
+        this.licenseVerified = licenseVerified;
     }
 }
