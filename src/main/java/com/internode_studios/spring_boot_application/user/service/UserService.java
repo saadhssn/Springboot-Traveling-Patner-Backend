@@ -352,9 +352,15 @@ public class UserService {
             user.setMobileNumber(userRequest.getMobileNumber());
             user.setIsOtpVerified(false);
             userRepository.save(user);
+
+            // Generate OTP for new user
+            otpService.generateOtp(user.getMobileNumber());
         } else {
             // Existing user
             user = existingUsers.get(0);
+
+            // Update OTP for existing user
+            otpService.updateOtp(user);  // Update OTP only if needed
         }
 
         // Generate JWT token
