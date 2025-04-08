@@ -70,7 +70,9 @@ public class LicenseService {
             if (updatedLicense.getLicenseBack() != null) {
                 existingLicense.setLicenseBack(updatedLicense.getLicenseBack());
             }
-            // Add checks for other fields as needed...
+            if (updatedLicense.getLicenseVerified() != null) {
+                existingLicense.setLicenseVerified(updatedLicense.getLicenseVerified());
+            }
 
             // Save the updated license
             License savedLicense = licenseRepository.save(existingLicense);

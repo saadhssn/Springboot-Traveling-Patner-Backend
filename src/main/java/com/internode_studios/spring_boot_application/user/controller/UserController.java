@@ -105,7 +105,6 @@ public class UserController {
         }
     }
 
-
     @PostMapping("/verify-otp")
     public ResponseEntity<?> verifyOtp(@RequestBody User userRequest) {
         Map<String, Object> response = userService.verifyOtp(userRequest.getMobileNumber(), userRequest.getOtp());
