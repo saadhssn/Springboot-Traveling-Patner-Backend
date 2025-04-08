@@ -82,6 +82,9 @@ public class BasicInformationService {
             if (updatedInfo.getReferralCode() != null) {
                 existingInfo.setReferralCode(updatedInfo.getReferralCode());
             }
+            if (updatedInfo.getAcceptTerm() != null) {
+                existingInfo.setAcceptTerm(updatedInfo.getAcceptTerm());
+            }
             return basicInformationRepository.save(existingInfo);
         }
         throw new IllegalArgumentException("Basic Information with ID " + id + " does not exist.");

@@ -21,6 +21,7 @@ public class BasicInformation {
     private String cnicBack;
     private String profilePicture;
     private String referralCode;
+    private Boolean acceptTerm;
 
     // Getters and Setters
     public Long getId() {
@@ -117,5 +118,13 @@ public class BasicInformation {
 
     public void setReferralCode(String referralCode) {
         this.referralCode = referralCode;
+    }
+
+    public Boolean getAcceptTerm() {
+        return acceptTerm;
+    }
+
+    public void setAcceptTerm(Boolean acceptTerm) {
+        this.acceptTerm = acceptTerm;
     }
 }
