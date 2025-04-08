@@ -2,6 +2,8 @@ package com.internode_studios.spring_boot_application.vehicle.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "vehicles")
 public class Vehicle {
@@ -26,6 +28,8 @@ public class Vehicle {
     private boolean ac;
     private boolean isPetsAllowed;
     private boolean isSmokingAllowed;
+    private Boolean vehicleVerified = false;
+
 
     // Getters and Setters
     public Long getId() {
@@ -138,5 +142,13 @@ public class Vehicle {
 
     public void setSmokingAllowed(boolean smokingAllowed) {
         isSmokingAllowed = smokingAllowed;
+    }
+
+    public Boolean getVehicleVerified() {
+        return vehicleVerified;
+    }
+
+    public void setVehicleVerified(Boolean vehicleVerified) {
+        this.vehicleVerified = vehicleVerified;
     }
 }

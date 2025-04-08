@@ -16,7 +16,7 @@ public class License {
     private Long userId;
     private String licenseFront;
     private String licenseBack;
-    private LocalDateTime licenseVerified;
+    private Boolean licenseVerified = false;
 
 
     // Getters and Setters
@@ -60,11 +60,11 @@ public class License {
         this.licenseBack = licenseBack;
     }
 
-    public LocalDateTime getLicenseVerified() {
+    public Boolean getLicenseVerified() {
         return licenseVerified;
     }
 
-    public void setLicenseVerified(LocalDateTime licenseVerified) {
+    public void setLicenseVerified(Boolean licenseVerified) {
         this.licenseVerified = licenseVerified;
     }
 }

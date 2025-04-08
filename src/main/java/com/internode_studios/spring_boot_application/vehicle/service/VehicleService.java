@@ -69,6 +69,8 @@ public class VehicleService {
             vehicle.setAc(vehicleDetails.isAc());
             vehicle.setPetsAllowed(vehicleDetails.isPetsAllowed());
             vehicle.setSmokingAllowed(vehicleDetails.isSmokingAllowed());
+            vehicle.setVehicleVerified(vehicleDetails.getVehicleVerified());
+
             return vehicleRepository.save(vehicle);
         }
         return null; // Or throw an exception

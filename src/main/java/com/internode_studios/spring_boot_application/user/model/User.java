@@ -72,7 +72,10 @@ public class User {
     private LocalDateTime deletedAt;
 
     @Column(name = "license_verified") // Timestamp for soft deletion
-    private LocalDateTime licenseVerified;
+    private Boolean licenseVerified = false;
+
+    @Column(name = "vehicle_verified") // Timestamp for soft deletion
+    private Boolean vehicleVerified = false;
 
     // Getters and Setters
     public Long getId() {
@@ -243,11 +246,19 @@ public class User {
         this.deletedAt = deletedAt;
     }
 
-    public LocalDateTime getLicenseVerified() {
+    public Boolean getLicenseVerified() {
         return licenseVerified;
     }
 
-    public void setLicenseVerified(LocalDateTime licenseVerified) {
+    public void setLicenseVerified(Boolean licenseVerified) {
         this.licenseVerified = licenseVerified;
+    }
+
+    public Boolean getVehicleVerified() {
+        return vehicleVerified;
+    }
+
+    public void setVehicleVerified(Boolean vehicleVerified) {
+        this.vehicleVerified = vehicleVerified;
     }
 }
